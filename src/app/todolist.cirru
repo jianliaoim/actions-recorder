@@ -2,6 +2,7 @@
 var
   React $ require :react
   Immutable $ require :immutable
+  classnames $ require :classnames
 
 var
   actions $ require :../actions
@@ -26,10 +27,11 @@ var
       actions.update (task.get :id) event.target.value
     var onRemove $ \\ ()
       actions.remove (task.get :id)
+    var checkboxClassName $ classnames :checkbox $ {}
+      :is-checked $ task.get :done
 
-    div ({} (:className ":todolist-task line"))
-      input $ {} (:type :checkbox) (:checked $ task.get :done)
-        :onClick onToggle
+    div ({} (:className ":todolist-task line") (:key $ task.get :id))
+      div $ {} (:className checkboxClassName) (:onClick onToggle)
       input $ {} (:type :text) (:value $ task.get :text)
         :onChange onUpdate
       div

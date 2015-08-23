@@ -4,7 +4,7 @@ var
   Immutable $ require :immutable
 
 var recorderOptions $ {}
-  :inProduction true
+  :inProduction false
 
 var core $ {}
   :inital (Immutable.Map)
@@ -42,7 +42,7 @@ var callUpdaterInProduction $ \ (actionType actionData)
     core.updater core.inital actionType actionData
   = core.inital newStore
   = core.records $ core.records.push
-    Immutable.List actionType actionData
+    Immutable.List $ [] actionType actionData
   recorderEmitter.emit :update newStore
     , core.records core.pointer
 
@@ -55,7 +55,7 @@ var callUpdater $ \ (actionType actionData)
       :commit
         var newStore $ core.records.reduce
           \ (acc action)
-            core.updater acc (. action 0) (. action 1)
+            core.updater acc (action.get 0) (action.get 1)
           , core.inital
         = core.inital newStore
         = core.records (Immutable.List)
@@ -64,34 +64,31 @@ var callUpdater $ \ (actionType actionData)
       :reset
         = core.records (Immutable.List)
         = core.pointer -1
-        recorderEmitter.emit :update newStore core.records core.pointer
+        recorderEmitter.emit :update core.inital core.records core.pointer
       :peek
         = core.pointer actionData
         var activeRecords $ core.records.slice 0 core.pointer
         var newStore $ activeRecords.reduce
           \ (acc action)
-            core.updater acc (. action 0) (. action 1)
+            core.updater acc (action.get 0) (action.get 1)
           , core.inital
         recorderEmitter.emit :update newStore core.records core.pointer
       :discard
-        = core.records $ core.records.slice 0 core.pointer
+        = core.records $ core.records.slice 0 $ + core.pointer 1
         var newStore $ core.records.reduce
           \ (acc action)
-            core.updater acc (. action 0) (. action 1)
+            core.updater acc (action.get 0) (action.get 1)
           , core.inital
         recorderEmitter.emit :update newStore core.records core.pointer
       else
         console.warn $ + ":Unknown actions-recorder action: " actionType
     do
-      emitUpdate actionType actionData
-  return undefind
-
-var emitUpdate $ \ (actionType actionData)
-  = core.records $ core.records.push
-    Immutable.List actionType actionData
-  var newStore $ core.records.reduce
-    \ (acc action)
-      core.updater acc (. action 0) (. action 1)
-    , core.inital
-  recorderEmitter.emit :update newStore
-    , core.records core.pointer
+      = core.records $ core.records.push
+        Immutable.List $ [] actionType actionData
+      var newStore $ core.records.reduce
+        \ (acc action)
+          core.updater acc (action.get 0) (action.get 1)
+        , core.inital
+      recorderEmitter.emit :update newStore
+        , core.records core.pointer
+  return undefined

@@ -6,11 +6,30 @@ body {
 
 .app-todolist {
   color: black;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
 }
 
-.todolist-header {}
+.todolist-header {
+  padding: 20px;
+}
 
-.todolist-table {}
+.todolist-table {
+  padding: 20px;
+}
 
 .todolist-task {}
 
+.todolist-task .checkbox {
+  width: 30px;
+  height: 30px;
+  background-color: hsl(0,0%,90%);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.todolist-task .checkbox.is-checked {
+  background-color: hsl(240,60%,80%);
+}

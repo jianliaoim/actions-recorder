@@ -10,7 +10,7 @@ var
       todo.update store actionType actionData
     :todo/toggle
       todo.toggle store actionType actionData
-    :togo/remove store
+    :todo/remove store
       todo.remove store actionType actionData
     else
       console.warn $ + ":Unknown action type: " actionType

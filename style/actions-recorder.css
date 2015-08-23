@@ -9,7 +9,6 @@
   color: white;
   font-family: Consolas, monospace;
   line-height: 1.8em;
-  padding: 10px;
   display: flex;
   flex-direction: column;
 }
@@ -18,6 +17,7 @@
   flex: 1;
   overflow-y: scroll;
   overflow-x: hidden;
+  padding-bottom: 600px;
 }
 
 .actions-recorder-controller .recorder-footer {
@@ -25,4 +25,20 @@
 
 .actions-recorder-controller .recorder-footer .button + .button {
   margin-left: 0.5em;
+}
+
+.actions-recorder-controller .recorder-item {
+  padding: 10px;
+  line-height: 1.6em;
+}
+.actions-recorder-controller .recorder-item.is-pointer {
+  background: hsla(0,100%,100%,0.2);
+}
+.actions-recorder-controller .record-title {}
+.actions-recorder-controller .record-content {
+  margin: 0 0 0 20px;
+  overflow: auto;
+  line-height: 1.4em;
+  max-height: 200px;
+  font-size: 12px;
 }

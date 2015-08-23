@@ -17,7 +17,7 @@ gulp.task :rsync $ \ (cb)
       :src $ array :index.html :build
       :recursive true
       :args $ array :--verbose
-      :dest :tiye:~/repo/workflow/
+      :dest :tiye:~/repo/actions-recorder/
       :deleteAll true
     \ (error stdout stderr cmd)
       if (? error)
@@ -31,7 +31,7 @@ gulp.task :script $ \ ()
     script $ require :gulp-cirru-script
 
   ... gulp
-    src :src/*.cirru
+    src :src/**/*.cirru
     pipe $ script
     pipe $ gulp.dest :lib/
 

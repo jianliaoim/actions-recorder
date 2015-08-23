@@ -2,9 +2,11 @@
 var
   React $ require :react
   Immutable $ require :immutable
+  classnames $ require :classnames
 
 var
   div $ React.createFactory :div
+  pre $ React.createFactory :pre
 
 = module.exports $ React.createClass $ {}
   :displayName :recorder-item
@@ -12,6 +14,21 @@ var
   :propTypes $ {}
     :index React.PropTypes.number.isRequired
     :record $ React.PropTypes.instanceOf Immutable.List
+    :isPointer React.PropTypes.bool.isRequired
+    :onPeek React.PropTypes.func.isRequired
+
+  :onClick $ \ ()
+    this.props.onPeek this.props.index
 
   :render $ \ ()
-    div null (this.props.record.get 0)
+    var actionType $ this.props.record.get 0
+    var actionData $ this.props.record.get 1
+    var className $ classnames :recorder-item $ {}
+      :is-pointer this.props.isPointer
+
+    div ({} (:className className))
+      div
+        {} (:className :record-title) (:onClick this.onClick)
+        , actionType
+      pre ({} (:className :record-content))
+        JSON.stringify actionData null 2
