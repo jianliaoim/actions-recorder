@@ -1,0 +1,39 @@
+{
+  "name": "webpack-workflow",
+  "version": "0.0.1",
+  "description": "Web app scaffold based on Webpack",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jiyinyiyong",
+  "license": "MIT",
+  "keywords": [
+    "workflow"
+  ],
+  "devDependencies": {
+    "cirru-script": "^0.2.3",
+    "cirru-script-loader": "0.1.0",
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-cirru-script": "^0.1.1",
+    "rsyncwrapper": "^0.4.2",
+    "run-sequence": "^1.0.2",
+    "stir-template": "^0.1.4",
+    "webpack": "^1.8.5",
+    "webpack-dev-server": "^1.8.0"
+  },
+  "dependencies": {
+    "component-emitter": "^1.2.0",
+    "immutable": "^3.7.4",
+    "react": "^0.13.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mvc-works/webpack-workflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mvc-works/webpack-workflow/issues"
+  },
+  "homepage": "https://github.com/mvc-works/webpack-workflow"
+}
