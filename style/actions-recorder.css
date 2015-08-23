@@ -1,0 +1,28 @@
+
+.actions-recorder-controller {
+  width: 300px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: hsl(140,3%,20%);
+  color: white;
+  font-family: Consolas, monospace;
+  line-height: 1.8em;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.actions-recorder-controller .recorder-monitor {
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.actions-recorder-controller .recorder-footer {
+}
+
+.actions-recorder-controller .recorder-footer .button + .button {
+  margin-left: 0.5em;
+}

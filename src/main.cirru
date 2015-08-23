@@ -8,6 +8,9 @@ var
   updater $ require :./updater
   initial $ require :./initial
 
+require :origami-ui
+require :../style/main.css
+
 recorder.setup initial updater
 
 var

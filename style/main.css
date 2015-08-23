@@ -1,4 +1,16 @@
 
 @import url(actions-recorder.css);
 
-body {}
+body {
+}
+
+.app-todolist {
+  color: black;
+}
+
+.todolist-header {}
+
+.todolist-table {}
+
+.todolist-task {}
+

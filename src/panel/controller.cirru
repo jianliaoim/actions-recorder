@@ -4,7 +4,7 @@ var
   Immutable $ require :immutable
 
 var
-  Record $ React.createFactory $ require :./record
+  RecordItem $ React.createFactory $ require :./record-item
 
 var
   div $ React.createFactory :div
@@ -25,7 +25,7 @@ var
       div ({} (:className :recorder-monitor))
         this.props.records.map $ \\ (record index)
           var onClick $ \\ () (this.props.onPeek index)
-          Record $ {} (:onClick onClick) (:record record)
+          RecordItem $ {} (:onClick onClick) (:record record)
       div ({} (:className :recorder-footer))
         div ({} (:className ":button is-attract") (:onClick this.props.onCommit)) :Commit
         div ({} (:className ":button is-danger") (:onClick this.props.onDiscard)) :Discard

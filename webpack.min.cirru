@@ -7,7 +7,7 @@ var
 = module.exports $ object
   :entry $ object
     :main $ array :./src/main
-    :vendor $ array
+    :vendor $ array :react :immutable
 
   :output $ object
     :path :build/

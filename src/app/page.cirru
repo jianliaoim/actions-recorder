@@ -7,6 +7,7 @@ var
   actions $ require :../actions
 
 var
+  Todolist $ React.createFactory $ require :./todolist
   Controller $ React.createFactory $ require :../panel/controller
 
 var
@@ -34,7 +35,11 @@ var
 
   :render $ \ ()
     div ({} (:className :app-page))
+      Todolist $ {}
+        :store this.props.store
       Controller $ {}
+        :records this.props.records
+        :pointer this.props.pointer
         :onCommit this.onCommit
         :onReset this.onReset
         :onPeek this.onPeek

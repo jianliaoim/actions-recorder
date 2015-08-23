@@ -1,6 +1,7 @@
 
 var
   React $ require :react
+  Immutable $ require :immutable
 
 var
   div $ React.createFactory :div

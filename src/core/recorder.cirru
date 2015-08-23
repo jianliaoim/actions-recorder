@@ -82,8 +82,9 @@ var callUpdater $ \ (actionType actionData)
         recorderEmitter.emit :update newStore core.records core.pointer
       else
         console.warn $ + ":Unknown actions-recorder action: " actionType
-    else
+    do
       emitUpdate actionType actionData
+  return undefind
 
 var emitUpdate $ \ (actionType actionData)
   = core.records $ core.records.push
