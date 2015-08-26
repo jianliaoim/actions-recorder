@@ -15,7 +15,9 @@ var
   :propTypes $ {}
     :records $ React.PropTypes.instanceOf Immutable.List
     :pointer React.PropTypes.number.isRequired
+    :isTravelling React.PropTypes.bool.isRequired
     :onCommit React.PropTypes.func.isRequired
+    :onSwitch React.PropTypes.func.isRequired
     :onReset React.PropTypes.func.isRequired
     :onPeek React.PropTypes.func.isRequired
     :onDiscard React.PropTypes.func.isRequired
@@ -32,9 +34,12 @@ var
           RecordItem $ {} (:onClick onClick) (:record record)
             :key index
             :index index
-            :isPointer $ is this.props.pointer index
+            :isPointer $ and this.props.isTravelling
+              is this.props.pointer index
             :onPeek this.props.onPeek
       div ({} (:className :recorder-footer))
         div ({} (:className ":button is-attract") (:onClick this.props.onCommit)) :Commit
+        div ({} (:className ":button is-attract") (:onClick this.props.onSwitch))
+          cond this.props.isTravelling :Back :Travel
         div ({} (:className ":button is-danger") (:onClick this.props.onDiscard)) :Discard
         div ({} (:className ":button is-danger") (:onClick this.props.onReset)) :Reset

@@ -18,11 +18,13 @@ var
 
   :propTypes $ {}
     :store $ React.PropTypes.instanceOf Immutable.List
-    :records $ React.PropTypes.instanceOf Immutable.List
-    :pointer React.PropTypes.number.isRequired
+    :recorder React.PropTypes.object.isRequired
 
   :onCommit $ \ ()
     actions.internalCommit
+
+  :onSwitch $ \ ()
+    actions.internalSwitch
 
   :onReset $ \ ()
     actions.internalReset
@@ -38,9 +40,11 @@ var
       Todolist $ {}
         :store this.props.store
       Controller $ {}
-        :records this.props.records
-        :pointer this.props.pointer
+        :records this.props.recorder.records
+        :pointer this.props.recorder.pointer
+        :isTravelling this.props.recorder.isTravelling
         :onCommit this.onCommit
+        :onSwitch this.onSwitch
         :onReset this.onReset
         :onPeek this.onPeek
         :onDiscard this.onDiscard

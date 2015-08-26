@@ -25,6 +25,9 @@ var
 = exports.internalCommit $ \ ()
   recorder.dispatch :actions-recorder/commit
 
+= exports.internalSwitch $ \ ()
+  recorder.dispatch :actions-recorder/switch
+
 = exports.internalReset $ \ ()
   recorder.dispatch :actions-recorder/reset
 

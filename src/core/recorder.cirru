@@ -18,6 +18,7 @@ var core $ {}
     :records (Immutable.List)
     :updater updater
     :pointer -1
+    :isTravelling false
   = recorderEmitter.inProduction $ or mode false
 
 var recorderEmitter $ new Emitter
@@ -43,8 +44,7 @@ var callUpdaterInProduction $ \ (actionType actionData)
   = core.inital newStore
   = core.records $ core.records.push
     Immutable.List $ [] actionType actionData
-  recorderEmitter.emit :update newStore
-    , core.records core.pointer
+  recorderEmitter.emit :update newStore core
 
 var callUpdater $ \ (actionType actionData)
   = actionData $ Immutable.fromJS actionData
@@ -60,35 +60,45 @@ var callUpdater $ \ (actionType actionData)
         = core.inital newStore
         = core.records (Immutable.List)
         = core.pointer -1
-        recorderEmitter.emit :update newStore core.records core.pointer
+        = core.isTravelling false
+        emitUpdate
       :reset
         = core.records (Immutable.List)
         = core.pointer -1
-        recorderEmitter.emit :update core.inital core.records core.pointer
+        = core.isTravelling false
+        emitUpdate
       :peek
         = core.pointer actionData
+        = core.isTravelling true
         var activeRecords $ core.records.slice 0 core.pointer
-        var newStore $ activeRecords.reduce
-          \ (acc action)
-            core.updater acc (action.get 0) (action.get 1)
-          , core.inital
-        recorderEmitter.emit :update newStore core.records core.pointer
+        emitUpdate
       :discard
         = core.records $ core.records.slice 0 $ + core.pointer 1
-        var newStore $ core.records.reduce
-          \ (acc action)
-            core.updater acc (action.get 0) (action.get 1)
-          , core.inital
-        recorderEmitter.emit :update newStore core.records core.pointer
+        emitUpdate
+      :switch
+        = core.isTravelling $ not core.isTravelling
+        = core.pointer 0
+        emitUpdate
       else
         console.warn $ + ":Unknown actions-recorder action: " actionType
     do
       = core.records $ core.records.push
         Immutable.List $ [] actionType actionData
-      var newStore $ core.records.reduce
+      emitUpdate
+  return undefined
+
+var emitUpdate $ \ ()
+  var newStore $ cond
+    and core.isTravelling (>= core.pointer 0)
+    ... core.records
+      slice 0 $ + core.pointer 1
+      reduce
         \ (acc action)
           core.updater acc (action.get 0) (action.get 1)
         , core.inital
-      recorderEmitter.emit :update newStore
-        , core.records core.pointer
-  return undefined
+    core.records.reduce
+      \ (acc action)
+        core.updater acc (action.get 0) (action.get 1)
+      , core.inital
+
+  recorderEmitter.emit :update newStore core

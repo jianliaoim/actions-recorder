@@ -26,9 +26,7 @@ var
     var className $ classnames :recorder-item $ {}
       :is-pointer this.props.isPointer
 
-    div ({} (:className className))
-      div
-        {} (:className :record-title) (:onClick this.onClick)
-        , actionType
+    div ({} (:className className) (:onClick this.onClick))
+      div ({} (:className :record-title)) actionType
       pre ({} (:className :record-content))
         JSON.stringify actionData null 2

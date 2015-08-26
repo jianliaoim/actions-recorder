@@ -18,8 +18,8 @@ npm i --save actions-recorder
 `recorder` is a mutable object like store, with methods:
 
 * `recorder.setup (inital updater mode) ->`
-* `recorder.subscribe (store records pointer) ->`
-* `recorder.ubsubscribe (store records pointer) ->`
+* `recorder.subscribe (store recorder) ->`
+* `recorder.ubsubscribe (store listener)`
 * `recorder.dispatch (actionType actionData)`
 
 `recorderController` is a component to show actions:
@@ -27,7 +27,8 @@ npm i --save actions-recorder
 ```coffee
 React.createElement recorderController,
   records: Immutable.List()
-  pointer: -1
+  pointer: 0
+  isTravelling: false
   onReset: ->
   onCommit: ->
   onPeek: (position) ->

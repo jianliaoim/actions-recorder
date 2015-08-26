@@ -18,11 +18,13 @@ var
 
 React.render
   Page $ {} (:store initial)
-    :records (Immutable.List)
-    :pointer -1
+    :recorder $ {}
+      :records (Immutable.List)
+      :pointer 0
+      :isTravelling false
   , document.body
 
-recorder.subscribe $ \ (store records pointer)
+recorder.subscribe $ \ (store recorder)
   React.render
-    Page $ {} (:store store) (:records records) (:pointer pointer)
+    Page $ {} (:store store) (:recorder recorder)
     , document.body
