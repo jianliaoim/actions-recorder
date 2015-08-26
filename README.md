@@ -6,6 +6,14 @@ This project is not tested. I'll add a blog as introduction later.
 
 Demo http://repo.tiye.me/actions-recorder/
 
+Buttons:
+
+* Travel/Back: turn on/off debugger
+* Commit: merge actions in records into initial state
+* Reset: clear records
+* Discard: clear records after current pointer
+* <Click on Record>: set pointer to a record
+
 ### Usage
 
 ```

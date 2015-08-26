@@ -3,23 +3,18 @@ var
   Emitter $ require :component-emitter
   Immutable $ require :immutable
 
-var recorderOptions $ {}
+var core $ {}
+  :records (Immutable.List)
+  :pointer 0
+  :isTravelling false
+  :initial (Immutable.Map)
+  :updater $ \ (state) state
   :inProduction false
 
-var core $ {}
-  :inital (Immutable.Map)
-  :updater $ \ (store)
-    console.warn ":Default recorder updater is called."
-    return store
-
-= exports.setup $ \ (inital updater mode)
-  = core $ {}
-    :inital inital
-    :records (Immutable.List)
-    :updater updater
-    :pointer -1
-    :isTravelling false
-  = recorderEmitter.inProduction $ or mode false
+= exports.setup $ \ (initial updater mode)
+  = core.initial initial
+  = core.updater updater
+  = core.inProduction $ or mode false
 
 var recorderEmitter $ new Emitter
 
@@ -30,7 +25,7 @@ var recorderEmitter $ new Emitter
   recorderEmitter.off :update fn
 
 = exports.dispatch $ \ (actionType actionData)
-  if recorderOptions.inProduction
+  if core.inProduction
     do
       callUpdaterInProduction actionType actionData
     do
@@ -40,8 +35,8 @@ var recorderEmitter $ new Emitter
 var callUpdaterInProduction $ \ (actionType actionData)
   = actionData $ Immutable.fromJS actionData
   var newStore
-    core.updater core.inital actionType actionData
-  = core.inital newStore
+    core.updater core.initial actionType actionData
+  = core.initial newStore
   = core.records $ core.records.push
     Immutable.List $ [] actionType actionData
   recorderEmitter.emit :update newStore core
@@ -53,18 +48,17 @@ var callUpdater $ \ (actionType actionData)
   if (is groupName :actions-recorder)
     do $ switch (. chunks 1)
       :commit
-        var newStore $ core.records.reduce
+        = core.initial $ core.records.reduce
           \ (acc action)
             core.updater acc (action.get 0) (action.get 1)
-          , core.inital
-        = core.inital newStore
+          , core.initial
         = core.records (Immutable.List)
-        = core.pointer -1
+        = core.pointer 0
         = core.isTravelling false
         emitUpdate
       :reset
         = core.records (Immutable.List)
-        = core.pointer -1
+        = core.pointer 0
         = core.isTravelling false
         emitUpdate
       :peek
@@ -95,10 +89,10 @@ var emitUpdate $ \ ()
       reduce
         \ (acc action)
           core.updater acc (action.get 0) (action.get 1)
-        , core.inital
+        , core.initial
     core.records.reduce
       \ (acc action)
         core.updater acc (action.get 0) (action.get 1)
-      , core.inital
+      , core.initial
 
   recorderEmitter.emit :update newStore core
