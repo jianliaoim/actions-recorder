@@ -21,6 +21,7 @@
 }
 
 .actions-recorder-controller .recorder-footer {
+  -webkit-user-select: none;
 }
 
 .actions-recorder-controller .recorder-footer .button + .button {

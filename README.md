@@ -19,16 +19,29 @@ Buttons:
 ```
 npm i --save actions-recorder
 ```
+
+Get `recorder`:
+
 ```coffee
-{recorder, recorderController} = require 'actions-recorder'
+recorder = require 'actions-recorder'
+```
+
+Get controller in Webpack:
+
+```coffee
+# for component
+recorderController = require 'actions-recorder/lib/panel/controller'
+# for styles
+require 'actions-recorder/style/actions-recorder.css'
 ```
 
 `recorder` is a mutable object like store, with methods:
 
-* `recorder.setup (inital updater mode) ->`
-* `recorder.subscribe (store recorder) ->`
-* `recorder.ubsubscribe (store listener)`
-* `recorder.dispatch (actionType actionData)`
+* `recorder.setup (options)`
+* `recorder.request (store, recorder) ->`
+* `recorder.subscribe (store, recorder) ->`
+* `recorder.ubsubscribe (listener)`
+* `recorder.dispatch (actionType, actionData)`
 
 `recorderController` is a component to show actions:
 
