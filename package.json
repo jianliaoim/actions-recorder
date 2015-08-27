@@ -9,15 +9,16 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "keywords": [
-    "redux", "react"
+    "redux",
+    "react"
   ],
   "devDependencies": {
-    "cirru-script": "^0.2.3",
-    "cirru-script-loader": "0.1.0",
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.9.3",
     "css-loader": "^0.16.0",
     "del": "^1.1.1",
     "gulp": "^3.8.11",
-    "gulp-cirru-script": "^0.1.1",
+    "gulp-coffee": "^2.3.1",
     "origami-ui": "0.0.1",
     "react": "^0.13.3",
     "react-hot-loader": "^1.2.9",
@@ -40,10 +41,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mvc-works/actions-recorder.git"
+    "url": "https://github.com/teambition/actions-recorder.git"
   },
   "bugs": {
-    "url": "https://github.com/mvc-works/actions-recorder/issues"
+    "url": "https://github.com/teambition/actions-recorder/issues"
   },
-  "homepage": "https://github.com/mvc-works/actions-recorder"
+  "homepage": "https://github.com/teambition/actions-recorder"
 }

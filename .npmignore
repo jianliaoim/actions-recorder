@@ -1,7 +1,7 @@
 
 /build
 /index.html
-/gulpfile.cirru
+/gulpfile.coffee
 /webpack.*
 /src
-/template.cirru
+/template.coffee
