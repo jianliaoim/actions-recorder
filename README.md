@@ -39,6 +39,8 @@ require 'actions-recorder/style/actions-recorder.css'
 
 * `recorder.setup (options)`
 * `recorder.request (store, recorder) ->`
+* `recorder.getState ()`
+* `recorder.getCore ()`
 * `recorder.subscribe (store, recorder) ->`
 * `recorder.ubsubscribe (listener)`
 * `recorder.dispatch (actionType, actionData)`

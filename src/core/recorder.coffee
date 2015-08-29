@@ -59,6 +59,12 @@ exports.setup = (options) ->
 exports.request = (fn) ->
   fn getNewStore(), core
 
+exports.getState = ->
+  getNewStore()
+
+exports.getCore = ->
+  core
+
 exports.subscribe = (fn) ->
   recorderEmitter.on "update", fn
 
