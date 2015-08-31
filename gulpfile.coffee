@@ -29,7 +29,7 @@ gulp.task 'rsync', (cb) ->
 gulp.task 'script', ->
   coffee = require('gulp-coffee')
   gulp.src('src/**/*.coffee')
-  .pipe coffee()
+  .pipe coffee(bare: true)
   .pipe gulp.dest('lib/')
 
 gulp.task 'html', (cb) ->

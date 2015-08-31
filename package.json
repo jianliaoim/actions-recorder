@@ -1,6 +1,6 @@
 {
   "name": "actions-recorder",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Actions Recorder(a Redux clone for learning purpose)",
   "main": "lib/core/recorder.js",
   "scripts": {

@@ -44,7 +44,7 @@ callUpdater = (actionType, actionData) ->
   else
     records: core.records.push(Immutable.List([actionType, actionData]))
 
-getNewStore = getNewStore = ->
+getNewStore = ->
   if core.isTravelling and core.pointer >= 0
     core.records.slice(0, core.pointer + 1).reduce((acc, action) ->
       core.updater acc, action.get(0), action.get(1)
@@ -75,7 +75,6 @@ exports.dispatch = (actionType, actionData) ->
   actionData = Immutable.fromJS(actionData)
   if core.inProduction
     core.initial = core.updater(core.initial, actionType, actionData)
-    core.records = core.records.push Immutable.List([actionType, actionData])
     recorderEmitter.emit "update", core.initial, core
   else
     assign core, callUpdater(actionType, actionData)
