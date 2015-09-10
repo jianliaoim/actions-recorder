@@ -1,11 +1,11 @@
 
-.actions-recorder-controller {
-  width: 400px;
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: hsl(140,3%,20%);
+.recorder-controller {
+  width: 800px;
+  height: 500px;
+  position: fixed;
+  top: 300px;
+  left: 100px;
+  background: hsla(240,60%,70%,0.8);
   color: white;
   font-family: Consolas, monospace;
   line-height: 1.8em;
@@ -13,33 +13,45 @@
   flex-direction: column;
 }
 
-.actions-recorder-controller .recorder-monitor {
-  flex: 1;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding-bottom: 600px;
-}
-
-.actions-recorder-controller .recorder-footer {
+.recorder-header {
   -webkit-user-select: none;
 }
 
-.actions-recorder-controller .recorder-footer .button + .button {
-  margin-left: 0.5em;
+.recorder-header input {
+  background-color: hsla(0,100%,100%,0.6);
 }
 
-.actions-recorder-controller .recorder-item {
-  padding: 10px;
-  line-height: 1.6em;
+.recorder-viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
 }
-.actions-recorder-controller .recorder-item.is-pointer {
+
+.recorder-controller .recorder-monitor {
+  width: 240px;
+  overflow-x: hidden;
+}
+
+.recorder-controller .recorder-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.recorder-controller .recorder-item.is-pointer {
   background: hsla(0,100%,100%,0.2);
 }
-.actions-recorder-controller .record-title {}
-.actions-recorder-controller .record-content {
-  margin: 0 0 0 20px;
+
+.recorder-details {
+  flex: 1;
   overflow: auto;
-  line-height: 1.4em;
-  max-height: 200px;
-  font-size: 12px;
+  padding: 20px;
+}
+
+.recorder-prev, .recorder-store {
+  background-color: hsla(240,80%,40%,0.3);
+  padding: 10px;
+}
+
+.recorder-action-data {
+  background-color: hsla(60,80%,80%,0.3);
+  padding: 10px;
 }

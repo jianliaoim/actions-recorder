@@ -19,7 +19,7 @@
     "del": "^1.1.1",
     "gulp": "^3.8.11",
     "gulp-coffee": "^2.3.1",
-    "origami-ui": "0.0.1",
+    "origami-ui": "0.0.2",
     "react": "^0.13.3",
     "react-hot-loader": "^1.2.9",
     "rsyncwrapper": "^0.4.2",

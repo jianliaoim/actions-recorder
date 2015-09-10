@@ -36,6 +36,8 @@ module.exports = React.createClass
       Controller
         records: @props.recorder.records
         pointer: @props.recorder.pointer
+        initial: @props.recorder.initial
+        updater: @props.recorder.updater
         isTravelling: @props.recorder.isTravelling
         onCommit: @onCommit
         onSwitch: @onSwitch
