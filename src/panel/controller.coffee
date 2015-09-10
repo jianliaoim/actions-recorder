@@ -9,6 +9,8 @@ div = React.createFactory("div")
 pre = React.createFactory("pre")
 input = React.createFactory("input")
 
+span = document.createElement('span')
+
 module.exports = React.createClass
   displayName: "actions-recorder-controller"
   propTypes:
@@ -27,12 +29,31 @@ module.exports = React.createClass
 
   getDefaultProps: ->
     language: 'en'
+    isDragging: false
+    x: 100
+    y: 100
 
   getInitialState: ->
     dataPath: ''
 
+  componentDidMount: ->
+    window.addEventListener 'dragover', @onMove
+
+  componentWillUnmount: ->
+    window.removeEventListener 'dragover', @onMove
+
   onChange: (event) ->
     @setState dataPath: event.target.value
+
+  onDragStart: (event) ->
+    event.dataTransfer.setDragImage span, 0, 0
+    @setState isDragging: true
+
+  onDragEnd: (event) ->
+    @setState isDragging: false
+
+  onMove: (event) ->
+    @setState x: (event.pageX - 400), y: (event.pageY - 250)
 
   renderItem: (record, index) ->
     onClick = =>
@@ -72,7 +93,10 @@ module.exports = React.createClass
     JSON.stringify helper(result, dataPath), null, 2
 
   render: ->
-    div className: "recorder-controller",
+    div
+      className: "recorder-controller", draggable: true
+      onDragStart: @onDragStart, onDragEnd: @onDragEnd
+      style: {top: @state.y, left: @state.x}
       div className: "recorder-header line",
         div className: "button is-attract", onClick: @props.onCommit,
           locale.get('commit', @props.language)

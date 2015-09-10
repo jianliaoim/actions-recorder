@@ -1,7 +1,7 @@
 {
   "name": "actions-recorder",
-  "version": "0.0.4",
-  "description": "Actions Recorder(a Redux clone for learning purpose)",
+  "version": "0.0.5",
+  "description": "React Actions Recorder(like Redux)",
   "main": "lib/core/recorder.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
   "license": "MIT",
   "keywords": [
     "redux",
-    "react"
+    "react-component"
   ],
   "devDependencies": {
     "coffee-loader": "^0.7.2",
