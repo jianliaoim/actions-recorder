@@ -49,9 +49,13 @@
 .recorder-prev, .recorder-store {
   background-color: hsla(240,80%,40%,0.3);
   padding: 10px;
+  font-size: 12px;
+  line-height: 1.4em;
 }
 
 .recorder-action-data {
   background-color: hsla(60,80%,80%,0.3);
   padding: 10px;
+  font-size: 12px;
+  line-height: 1.4em;
 }

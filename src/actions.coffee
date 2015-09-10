@@ -13,18 +13,16 @@ exports.update = (id, text) ->
     id: id
     text: text
 
-
 exports.toggle = (id) ->
   recorder.dispatch "todo/toggle", id
 
 exports.remove = (id) ->
   recorder.dispatch "todo/remove", id
 
+# recoreder actions
+
 exports.internalCommit = ->
   recorder.dispatch "actions-recorder/commit"
-
-exports.internalSwitch = ->
-  recorder.dispatch "actions-recorder/switch"
 
 exports.internalReset = ->
   recorder.dispatch "actions-recorder/reset"
@@ -32,5 +30,11 @@ exports.internalReset = ->
 exports.internalPeek = (position) ->
   recorder.dispatch "actions-recorder/peek", position
 
-exports.internalDiscard = ->
-  recorder.dispatch "actions-recorder/discard"
+exports.internalRun = ->
+  recorder.dispatch "actions-recorder/run"
+
+exports.internalMergeBefore = ->
+  recorder.dispatch "actions-recorder/merge-before"
+
+exports.internalClearAfter = ->
+  recorder.dispatch "actions-recorder/clear-after"

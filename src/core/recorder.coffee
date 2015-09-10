@@ -33,10 +33,17 @@ callUpdater = (actionType, actionData) ->
       when "peek"
         pointer: actionData
         isTravelling: true
-      when "discard"
-        records: core.records.slice(0, core.pointer + 1)
-      when "switch"
+      when "run"
         isTravelling: not core.isTravelling
+        pointer: 0
+      when "merge-before"
+        initial: core.records.slice(0, core.pointer + 1).reduce (acc, action) ->
+          core.updater acc, action.get(0), action.get(1)
+        , core.initial
+        records: core.records.slice(core.pointer + 1)
+        pointer: 0
+      when "clear-after"
+        records: core.records.slice(0, core.pointer + 1)
         pointer: 0
       else
         console.warn "Unknown actions-recorder action: " + actionType

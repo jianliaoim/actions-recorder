@@ -3,6 +3,8 @@ React = require("react")
 Immutable = require("immutable")
 classnames = require("classnames")
 
+locale = require './locale'
+
 div = React.createFactory("div")
 pre = React.createFactory("pre")
 input = React.createFactory("input")
@@ -16,10 +18,15 @@ module.exports = React.createClass
     pointer: React.PropTypes.number.isRequired
     isTravelling: React.PropTypes.bool.isRequired
     onCommit: React.PropTypes.func.isRequired
-    onSwitch: React.PropTypes.func.isRequired
     onReset: React.PropTypes.func.isRequired
     onPeek: React.PropTypes.func.isRequired
-    onDiscard: React.PropTypes.func.isRequired
+    onMergeBefore: React.PropTypes.func.isRequired
+    onClearAfter: React.PropTypes.func.isRequired
+    onRun: React.PropTypes.func.isRequired
+    language: React.string
+
+  getDefaultProps: ->
+    language: 'en'
 
   getInitialState: ->
     dataPath: ''
@@ -67,16 +74,22 @@ module.exports = React.createClass
   render: ->
     div className: "recorder-controller",
       div className: "recorder-header line",
-        div className: "button is-attract", onClick: @props.onCommit, "Commit"
-        div className: "button is-attract", onClick: @props.onSwitch,
-          if @props.isTravelling then "Back" else "Travel"
-        div className: "button is-danger", onClick: @props.onDiscard, "Discard"
-        div className: "button is-danger", onClick: @props.onReset, "Reset"
+        div className: "button is-attract", onClick: @props.onCommit,
+          locale.get('commit', @props.language)
+        div className: "button is-danger", onClick: @props.onReset,
+          locale.get('reset', @props.language)
+        div className: "button is-attract", onClick: @props.onMergeBefore,
+          locale.get('mergeBefore', @props.language)
+        div className: "button is-danger", onClick: @props.onClearAfter,
+          locale.get('clearAfter', @props.language)
+        if @props.isTravelling
+          div className: "button is-attract", onClick: @props.onRun,
+            locale.get('run', @props.language)
         input value: @state.dataPath, onChange: @onChange
       div className: 'recorder-viewer',
         div className: "recorder-monitor",
           @props.records.map @renderItem
-        if @props.records.get(@props.pointer)?
+        if @props.isTravelling and @props.records.get(@props.pointer)?
           div className: "recorder-details",
             @renderPrev()
             @renderAction()

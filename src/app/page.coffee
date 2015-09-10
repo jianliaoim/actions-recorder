@@ -18,17 +18,20 @@ module.exports = React.createClass
   onCommit: onCommit = ->
     actions.internalCommit()
 
-  onSwitch: onSwitch = ->
-    actions.internalSwitch()
-
-  onReset: onReset = ->
+  onReset: ->
     actions.internalReset()
 
-  onPeek: onPeek = (position) ->
+  onPeek: (position) ->
     actions.internalPeek position
 
-  onDiscard: onDiscard = ->
-    actions.internalDiscard()
+  onRun: ->
+    actions.internalRun()
+
+  onMergeBefore: ->
+    actions.internalMergeBefore()
+
+  onClearAfter: ->
+    actions.internalClearAfter()
 
   render: render = ->
     div className: "app-page",
@@ -40,7 +43,9 @@ module.exports = React.createClass
         updater: @props.recorder.updater
         isTravelling: @props.recorder.isTravelling
         onCommit: @onCommit
-        onSwitch: @onSwitch
         onReset: @onReset
         onPeek: @onPeek
-        onDiscard: @onDiscard
+        onRun: @onRun
+        onMergeBefore: @onMergeBefore
+        onClearAfter: @onClearAfter
+        language: 'en'
