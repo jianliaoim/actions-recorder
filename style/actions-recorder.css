@@ -7,18 +7,46 @@
   left: 100px;
   background: hsla(240,60%,70%,0.8);
   color: white;
-  font-family: Consolas, monospace;
+  font-family: Menlo, Consolas, monospace;
   line-height: 1.8em;
   display: flex;
   flex-direction: column;
+  transition-property: left top;
+  transition-duration: 300ms;
+  z-index: 9999;
+}
+
+.recorder-controller .tap-button {
+  display: inline-block;
+  background-color: hsla(0,100%,100%,0.2);
+  margin-right: 10px;
+  padding: 0 10px;
+  font-size: 14px;
+  font-family: helvetica, sans-serif;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.recorder-controller .tap-button.is-selected {
+  background-color: hsla(0,100%,100%,0.5);
 }
 
 .recorder-header {
   -webkit-user-select: none;
+  margin-bottom: 10px;
 }
 
 .recorder-header input {
-  background-color: hsla(0,100%,100%,0.6);
+  background-color: hsla(240,70%,90%,0.1);
+  border-color: hsla(0,100%,100%,0.8);
+  color: white;
+  width: 300px;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  outline: none;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 13px;
+  padding: 0 6px;
 }
 
 .recorder-viewer {
@@ -28,13 +56,16 @@
 }
 
 .recorder-controller .recorder-monitor {
-  width: 240px;
+  width: 250px;
+  margin-right: 10px;
   overflow-x: hidden;
 }
 
 .recorder-controller .recorder-item {
-  padding: 5px 10px;
   cursor: pointer;
+  line-height: 30px;
+  font-size: 13px;
+  padding: 0 10px;
 }
 .recorder-controller .recorder-item.is-pointer {
   background: hsla(0,100%,100%,0.2);
@@ -43,19 +74,18 @@
 .recorder-details {
   flex: 1;
   overflow: auto;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-.recorder-prev, .recorder-store {
-  background-color: hsla(240,80%,40%,0.3);
-  padding: 10px;
-  font-size: 12px;
-  line-height: 1.4em;
+.recorder-mode {
+  height: 30px;
+  flex-direction: row;
 }
 
-.recorder-action-data {
-  background-color: hsla(60,80%,80%,0.3);
-  padding: 10px;
+.recorder-data {
+  flex: 1;
   font-size: 12px;
-  line-height: 1.4em;
+  line-height: 16px;
+  font-family: Menlo, Consolas, monospace;
 }
