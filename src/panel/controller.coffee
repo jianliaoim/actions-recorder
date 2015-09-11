@@ -1,6 +1,6 @@
 
 diff = require 'immutablediff'
-React = require("react")
+React = require 'react/addons'
 keycode = require 'keycode'
 Immutable = require("immutable")
 classnames = require("classnames")
@@ -16,6 +16,8 @@ tabs = ['action', 'store', 'prev', 'diff']
 
 module.exports = React.createClass
   displayName: "actions-recorder-controller"
+  mixins: [React.addons.PureRenderMixin]
+
   propTypes:
     records: React.PropTypes.instanceOf(Immutable.List)
     inital: React.PropTypes.instanceOf(Immutable.Map)
@@ -35,8 +37,8 @@ module.exports = React.createClass
 
   getInitialState: ->
     dataPath: ''
-    x: 0
-    y: 0
+    x: 400
+    y: 200
     tab: 'prev' # ['action', 'prev', 'store', 'diff']
 
   onChange: (event) ->
@@ -91,7 +93,7 @@ module.exports = React.createClass
     helper = (data, keys) ->
       if keys.length is 0
         data
-      else if data.get?
+      else if data?.get?
         piece = data.get(keys[0])
         if (not piece?) and (Immutable.List.isList data)
           piece = data.find (item) ->

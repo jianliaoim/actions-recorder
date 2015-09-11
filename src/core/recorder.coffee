@@ -8,7 +8,7 @@ core =
   pointer: 0
   isTravelling: false
   initial: Immutable.Map()
-  updater: updater = (state) ->
+  updater: (state) ->
     state
   inProduction: false
 
