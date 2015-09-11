@@ -91,8 +91,13 @@ module.exports = React.createClass
     helper = (data, keys) ->
       if keys.length is 0
         data
-      else
-        try helper data.get(keys[0]), keys.slice(1)
+      else if data.get?
+        piece = data.get(keys[0])
+        if (not piece?) and (Immutable.List.isList data)
+          piece = data.find (item) ->
+            item.get('id') is keys[0] or item.get('_id') is keys[0]
+        helper piece, keys.slice(1)
+      else data
     JSON.stringify helper(result, dataPath), null, 2
 
   renderDetails: ->
