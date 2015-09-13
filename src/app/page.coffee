@@ -48,4 +48,4 @@ module.exports = React.createClass
         onRun: @onRun
         onMergeBefore: @onMergeBefore
         onClearAfter: @onClearAfter
-        language: 'en'
+        language: 'zh'

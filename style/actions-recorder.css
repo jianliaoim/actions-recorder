@@ -59,6 +59,7 @@
   width: 250px;
   margin-right: 10px;
   overflow-x: hidden;
+  padding-bottom: 400px;
 }
 
 .recorder-controller .recorder-item {
@@ -76,6 +77,10 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
+}
+.recorder-current {
+  flex: 1;
+  overflow: auto;
 }
 
 .recorder-mode {

@@ -39,7 +39,7 @@ module.exports = React.createClass
     dataPath: ''
     x: 400
     y: 200
-    tab: 'prev' # ['action', 'prev', 'store', 'diff']
+    tab: 'action' # ['action', 'prev', 'store', 'diff']
 
   onChange: (event) ->
     @setState dataPath: event.target.value
@@ -102,6 +102,14 @@ module.exports = React.createClass
       else data
     JSON.stringify helper(result, dataPath), null, 2
 
+  renderCurrent: ->
+    updater = (acc, record) =>
+      @props.updater acc, record.get(0), record.get(1)
+    store = @props.records.reduce updater, @props.initial
+    div className: 'recorder-current',
+      pre className: 'recorder-data',
+        @renderResult store
+
   renderDetails: ->
     div className: "recorder-details",
       div className: 'recorder-mode',
@@ -138,3 +146,5 @@ module.exports = React.createClass
           @props.records.map @renderItem
         if @props.isTravelling and @props.records.get(@props.pointer)?
           @renderDetails()
+        else
+          @renderCurrent()
