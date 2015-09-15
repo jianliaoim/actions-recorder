@@ -37,10 +37,10 @@ callUpdater = (actionType, actionData) ->
         isTravelling: not core.isTravelling
         pointer: 0
       when "merge-before"
-        initial: core.records.slice(0, core.pointer + 1).reduce (acc, action) ->
+        initial: core.records.slice(0, core.pointer).reduce (acc, action) ->
           core.updater acc, action.get(0), action.get(1)
         , core.initial
-        records: core.records.slice(core.pointer + 1)
+        records: core.records.slice(core.pointer)
         pointer: 0
       when "clear-after"
         records: core.records.slice(0, core.pointer + 1)
