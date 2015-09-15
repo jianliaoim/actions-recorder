@@ -1,6 +1,5 @@
 
 assign = require("object-assign")
-Emitter = require("component-emitter")
 Immutable = require("immutable")
 
 core =
@@ -8,21 +7,23 @@ core =
   pointer: 0
   isTravelling: false
   initial: Immutable.Map()
-  updater: (state) ->
-    state
+  updater: (state) -> state
   inProduction: false
 
-recorderEmitter = new Emitter()
+recorderListeners = Immutable.List()
+recorderEmit = (store, core) ->
+  recorderListeners.forEach (fn) ->
+    fn store, core
 
 callUpdater = (actionType, actionData) ->
   chunks = actionType.split("/")
   groupName = chunks[0]
+  updater = (acc, action) ->
+    core.updater acc, action.get(0), action.get(1)
   if groupName is "actions-recorder"
     switch chunks[1]
       when "commit"
-        initial: core.records.reduce (acc, action) ->
-          core.updater acc, action.get(0), action.get(1)
-        , core.initial
+        initial: core.records.reduce updater, core.initial
         records: Immutable.List()
         pointer: 0
         isTravelling: false
@@ -37,9 +38,7 @@ callUpdater = (actionType, actionData) ->
         isTravelling: not core.isTravelling
         pointer: 0
       when "merge-before"
-        initial: core.records.slice(0, core.pointer).reduce (acc, action) ->
-          core.updater acc, action.get(0), action.get(1)
-        , core.initial
+        initial: core.records.slice(0, core.pointer).reduce updater, core.initial
         records: core.records.slice(core.pointer)
         pointer: 0
       when "clear-after"
@@ -52,13 +51,12 @@ callUpdater = (actionType, actionData) ->
     records: core.records.push(Immutable.List([actionType, actionData]))
 
 getNewStore = ->
-  if core.isTravelling and core.pointer >= 0
-    core.records.slice(0, core.pointer + 1).reduce((acc, action) ->
-      core.updater acc, action.get(0), action.get(1)
-    , core.initial)
-  else core.records.reduce (acc, action) ->
+  updater = (acc, action) ->
     core.updater acc, action.get(0), action.get(1)
-  , core.initial
+  if core.isTravelling and core.pointer >= 0
+    core.records.slice(0, core.pointer + 1).reduce updater, core.initial
+  else
+    core.records.reduce updater, core.initial
 
 exports.setup = (options) ->
   assign core, options
@@ -73,17 +71,19 @@ exports.getCore = ->
   core
 
 exports.subscribe = (fn) ->
-  recorderEmitter.on "update", fn
+  # bypass warning of "setState on unmounted component" with unshift
+  recorderListeners = recorderListeners.unshift fn
 
 exports.unsubscribe = (fn) ->
-  recorderEmitter.off "update", fn
+  recorderListeners = recorderListeners.filterNot (listener) ->
+    listener is fn
 
 exports.dispatch = (actionType, actionData) ->
   actionData = Immutable.fromJS(actionData)
   if core.inProduction
     core.initial = core.updater(core.initial, actionType, actionData)
-    recorderEmitter.emit "update", core.initial, core
+    recorderEmit core.initial, core
   else
     assign core, callUpdater(actionType, actionData)
-    recorderEmitter.emit "update", getNewStore(), core
+    recorderEmit getNewStore(), core
   return
