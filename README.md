@@ -22,13 +22,11 @@ Get `recorder`:
 recorder = require 'actions-recorder'
 ```
 
-Get devtools in Webpack:
+Get Devtools:
 
 ```coffee
 # for component
 Devtools = require 'actions-recorder/lib/app/devtools'
-# for styles
-require 'actions-recorder/style/actions-recorder.css'
 ```
 
 `recorder` is a mutable object like store, with methods:

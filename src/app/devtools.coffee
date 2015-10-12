@@ -69,12 +69,8 @@ module.exports = React.createClass
     recorder.dispatch "actions-recorder/clear-after"
 
   renderItem: (record, index) ->
-    onClick = =>
-      @onPeek index
-    className = classnames "recorder-item",
-      "is-pointer": @props.isTravelling and @props.pointer is index
-
-    div key: index, className: className, onClick: onClick, record.get(0)
+    onClick = => @onPeek index
+    div key: index, style: @styleItem(@props.pointer is index), onClick: onClick, record.get(0)
 
   renderAction: ->
     record = @props.records.get(@props.pointer)
@@ -119,18 +115,17 @@ module.exports = React.createClass
     updater = (acc, record) =>
       @props.updater acc, record.get(0), record.get(1)
     store = @props.records.reduce updater, @props.initial
-    div className: 'recorder-current',
-      pre className: 'recorder-data',
+    div style: @styleCurrent(),
+      pre style: @styleData(),
         @renderResult store
 
   renderDetails: ->
-    div className: "recorder-details",
-      div className: 'recorder-mode',
+    div style: @styleDetails(),
+      div style: @styleMode(),
         tabs.map (name) =>
-          tabClass = classnames 'tap-button', 'is-selected': (name is @state.tab)
           onClick = => @onTabSelect name
-          div className: tabClass, onClick: onClick, key: name, name
-      pre className: 'recorder-data',
+          div style: @styleButton(name is @state.tab), onClick: onClick, key: name, name
+      pre style: @styleData(),
         switch @state.tab
           when 'action' then @renderAction()
           when 'prev' then @renderPrev()
@@ -138,28 +133,109 @@ module.exports = React.createClass
           when 'diff' then @renderDiff()
 
   render: ->
-    style = {top: @state.y, left: @state.x}
     hint = (text) =>
       locale.get(text, @props.language)
 
-    div className: "recorder-devtools", style: style,
-      div className: "recorder-header",
-        div className: "tap-button", onClick: @onCommit,
+    div style: @styleRoot(),
+      div style: @styleHeader(),
+        div style: @styleButton(false), onClick: @onCommit,
           hint 'commit'
-        div className: "tap-button", onClick: @onReset,
+        div style: @styleButton(false), onClick: @onReset,
           hint 'reset'
-        div className: "tap-button", onClick: @onMergeBefore,
+        div style: @styleButton(false), onClick: @onMergeBefore,
           hint 'mergeBefore'
-        div className: "tap-button", onClick: @onClearAfter,
+        div style: @styleButton(false), onClick: @onClearAfter,
           hint 'clearAfter'
         if @props.isTravelling
-          div className: "tap-button", onClick: @onRun,
+          div style: @styleButton(false), onClick: @onRun,
             hint 'run'
-        input value: @state.dataPath, onChange: @onChange, onKeyDown: @onKeyDown
-      div className: 'recorder-viewer',
-        div className: "recorder-monitor",
+        input style: @styleInput(), value: @state.dataPath, onChange: @onChange, onKeyDown: @onKeyDown
+      div style: @styleViewer(),
+        div style: @styleMonitor(),
           @props.records.map @renderItem
         if @props.isTravelling and @props.records.get(@props.pointer)?
           @renderDetails()
         else
           @renderCurrent()
+
+  styleRoot: ->
+    top: @state.y
+    left: @state.x
+    width: '800px'
+    height: '500px'
+    position: 'fixed'
+    top: '300px'
+    left: '100px'
+    background: 'hsla(240,60%,70%,0.8)'
+    color: 'white'
+    fontFamily: 'Menlo, Consolas, monospace'
+    lineHeight: '1.8em'
+    display: 'flex'
+    flexDirection: 'column'
+    transitionProperty: 'left top'
+    transitionDuration: '300ms'
+    zIndex: 9999
+
+  styleButton: (isSelected) ->
+    display: 'inline-block'
+    backgroundColor: if isSelected then 'hsla(0,100%,100%,0.2)' else 'hsla(0,100%,100%,0.5)'
+    marginRight: '10px'
+    padding: '0 10px'
+    fontSize: '14px'
+    fontFamily: 'Verdana, Helvetica, sans-serif'
+    lineHeight: '30px'
+    cursor: 'pointer'
+
+  styleHeader: ->
+    WebkitUserSelect: 'none'
+    marginBottom: '10px'
+
+  styleInput: ->
+    backgroundColor: 'hsla(240,70%,90%,0.1)'
+    borderColor: 'hsla(0,100%,100%,0.8)'
+    color: 'white'
+    width: '300px'
+    borderCtyle: 'solid'
+    borderWidth: '0 0 1px 0'
+    outline: 'none'
+    fontFamily: 'Menlo, Consolas, monospace'
+    fontSize: '13px'
+    padding: '0 6px'
+
+  styleViewer: ->
+    flex: 1
+    display: 'flex'
+    flexDirection: 'row'
+
+  styleMonitor: ->
+    width: '250px'
+    marginRight: '10px'
+    overflowX: 'hidden'
+    paddingBottom: '400px'
+
+  styleItem: (isPointer) ->
+    cursor: 'pointer'
+    lineHeight: '30px'
+    fontSize: '13px'
+    padding: '0 10px'
+    backgroundColor: if isPointer then 'hsla(0,100%,100%,0.2)' else 'transparent'
+
+  styleDetails: ->
+    flex: 1
+    overflow: 'auto'
+    display: 'flex'
+    flexDirection: 'column'
+
+  styleCurrent: ->
+    flex: 1
+    overflow: 'auto'
+
+  styleMode: ->
+    height: '30px'
+    flexDirection: 'row'
+
+  styleData: ->
+    flex: 1
+    fontSize: '12px'
+    lineHeight: '16px'
+    fontFamily: 'Menlo, Consolas, monospace'
