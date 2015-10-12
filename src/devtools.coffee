@@ -27,9 +27,13 @@ module.exports = React.createClass
     pointer: React.PropTypes.number.isRequired
     isTravelling: React.PropTypes.bool.isRequired
     language: React.PropTypes.string
+    width: React.PropTypes.number
+    height: React.PropTypes.number
 
   getDefaultProps: ->
     language: 'en'
+    width: window.innerWidth
+    height: window.innerHeight
 
   getInitialState: ->
     tab: 'action' # ['action', 'prev', 'store', 'diff']
@@ -61,19 +65,19 @@ module.exports = React.createClass
 
   renderAction: ->
     record = @props.records.get(@props.pointer)
-    Viewer data: record.get(1)
+    Viewer height: (@props.height - 40), data: record.get(1)
 
   renderPrev: ->
     updater = (acc, record) =>
       @props.updater acc, record.get(0), record.get(1)
     result = @props.records.slice(0, @props.pointer).reduce updater, @props.initial
-    Viewer data: result
+    Viewer height: (@props.height - 40), data: result
 
   renderStore: ->
     updater = (acc, record) =>
       @props.updater acc, record.get(0), record.get(1)
     result = @props.records.slice(0, @props.pointer + 1).reduce updater, @props.initial
-    Viewer data: result
+    Viewer height: (@props.height - 40), data: result
 
   renderDiff: ->
     updater = (acc, record) =>
@@ -81,10 +85,10 @@ module.exports = React.createClass
     prevResult = @props.records.slice(0, @props.pointer).reduce updater, @props.initial
     result = @props.records.slice(0, @props.pointer + 1).reduce updater, @props.initial
     changes = diff prevResult, result
-    Viewer data: changes
+    Viewer height: (@props.height - 40), data: changes
 
   renderCurrent: ->
-    Viewer data: @props.store
+    Viewer height: (@props.height - 40), data: @props.store
 
   renderDetails: ->
     div style: @styleDetails(),
@@ -119,15 +123,19 @@ module.exports = React.createClass
           @renderCurrent()
 
   styleRoot: ->
-    background: 'hsla(200,60%,40%,0.6)'
+    background: 'hsla(200,60%,40%,0.8)'
     color: 'white'
     fontFamily: 'Menlo, Consolas, monospace'
     lineHeight: '1.8em'
     display: 'flex'
+    height: '100%'
     flexDirection: 'column'
-    transitionProperty: 'left top'
+    transitionProperty: 'left, top'
     transitionDuration: '300ms'
     zIndex: 9999
+    position: 'absolute'
+    width: '100%'
+    height: '100%'
 
   styleButton: (isSelected) ->
     display: 'inline-block'
@@ -147,12 +155,15 @@ module.exports = React.createClass
     flex: 1
     display: 'flex'
     flexDirection: 'row'
+    height: (@props.height - 40)
+    position: 'relative'
 
   styleMonitor: ->
     width: '250px'
     marginRight: '10px'
     overflowX: 'hidden'
     paddingBottom: '40px'
+    height: (@props.height - 40)
 
   styleItem: (isPointer) ->
     cursor: 'pointer'

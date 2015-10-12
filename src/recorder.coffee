@@ -84,6 +84,7 @@ exports.dispatch = (actionType, actionData) ->
   actionData = Immutable.fromJS(actionData)
   if core.inProduction
     core.initial = core.updater(core.initial, actionType, actionData)
+    core.cachedStore = core.initial
     recorderEmit core.initial, core
   else
     assign core, callUpdater(actionType, actionData)

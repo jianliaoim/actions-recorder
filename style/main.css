@@ -2,6 +2,10 @@
 body {
 }
 
+.app-page {
+  background-image: url(../images/paris.jpg);
+}
+
 .app-todolist {
   color: black;
   overflow-y: auto;

@@ -4,6 +4,7 @@ Immutable = require("immutable")
 
 recorder = require("./recorder")
 updater = require("./updater")
+# testData = require './test.json'
 
 require "origami-ui"
 require "../style/main.css"
@@ -22,6 +23,10 @@ if rawPersistent
     defaultInfo.records = Immutable.fromJS(jsonPersistent.records)
     defaultInfo.pointer = jsonPersistent.pointer
     defaultInfo.isTravelling = jsonPersistent.isTravelling
+
+# defaultInfo.initial = Immutable.fromJS(testData)
+# defaultInfo.records = Immutable.fromJS([])
+
 recorder.setup defaultInfo
 window.onbeforeunload = ->
   recorder.request (store, core) ->

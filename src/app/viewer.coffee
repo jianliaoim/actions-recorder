@@ -10,6 +10,7 @@ module.exports = React.createClass
 
   propTypes:
     data: React.PropTypes.instanceOf(Immutable.Collection).isRequired
+    height: React.PropTypes.number.isRequired
 
   getInitialState: ->
     path: []
@@ -27,7 +28,7 @@ module.exports = React.createClass
     @setState path: []
 
   renderPath: ->
-    div null,
+    div style: @stylePath(),
       div style: @styleKey(), onClick: @onPathRootClick, '/'
       @state.path.map (key, index) =>
         onClick = => @onPathClick index
@@ -47,8 +48,8 @@ module.exports = React.createClass
       div style: @styleEntries(),
         keys.map (entry) =>
           onClick = => @onParentKeyClick entry
-          div key: entry, onClick: onClick,
-            span style: @styleKey(), entry
+          div key: entry,
+            span style: @styleKey(), onClick: onClick, entry
     else
       undefined
 
@@ -86,24 +87,36 @@ module.exports = React.createClass
 
   styleRoot: ->
     flex: 1
+    height: @props.height
 
   styleTable: ->
     display: 'flex'
     flexDirection: 'row'
+    flex: 1
+    overflowY: 'auto'
+    height: (@props.height - 70)
 
   styleEntries: ->
-    width: '200px'
+    width: '300px'
+    height: (@props.height - 70)
+    overflowY: 'auto'
+    overflowX: 'visible'
+
+  stylePath: ->
+    margin: '20px 0'
 
   styleKey: ->
-    backgroundColor: Color().hsl(0,0,90,0.5).hslString()
+    backgroundColor: Color().hsl(0,0,90,0.2).hslString()
     padding: '0 10px'
-    lineHeight: '20px'
+    lineHeight: '24px'
     fontSize: '14px'
     display: 'inline-block'
-    borderRadius: '4px'
     cursor: 'pointer'
     marginRight: '10px'
+    marginBottom: '6px'
 
   styleValue: ->
     flex: 1
     margin: 0
+    overflowY: 'auto'
+    height: (@props.height - 70)
