@@ -48,10 +48,6 @@ React.createElement recorderController,
   records: Immutable.List()
   pointer: 0
   isTravelling: false
-  onReset: ->
-  onCommit: ->
-  onPeek: (position) ->
-  onDiscard: ->
 ```
 
 Read code in `src/` to get more details. Or read compiled JavaScipt:

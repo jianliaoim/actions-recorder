@@ -2,6 +2,7 @@
 diff = require 'immutablediff'
 React = require 'react/addons'
 keycode = require 'keycode'
+recorder = require '../core/recorder'
 Immutable = require("immutable")
 classnames = require("classnames")
 
@@ -24,12 +25,6 @@ module.exports = React.createClass
     updater: React.PropTypes.func.isRequired
     pointer: React.PropTypes.number.isRequired
     isTravelling: React.PropTypes.bool.isRequired
-    onCommit: React.PropTypes.func.isRequired
-    onReset: React.PropTypes.func.isRequired
-    onPeek: React.PropTypes.func.isRequired
-    onMergeBefore: React.PropTypes.func.isRequired
-    onClearAfter: React.PropTypes.func.isRequired
-    onRun: React.PropTypes.func.isRequired
     language: React.PropTypes.string
 
   getDefaultProps: ->
@@ -55,9 +50,27 @@ module.exports = React.createClass
         when 'up' then @setState y: @state.y - 200
         when 'down' then @setState y: @state.y + 200
 
+  onCommit: ->
+    recorder.dispatch "actions-recorder/commit"
+
+  onReset: ->
+    recorder.dispatch "actions-recorder/reset"
+
+  onPeek: (position) ->
+    recorder.dispatch "actions-recorder/peek", position
+
+  onRun: ->
+    recorder.dispatch "actions-recorder/run"
+
+  onMergeBefore: ->
+    recorder.dispatch "actions-recorder/merge-before"
+
+  onClearAfter: ->
+    recorder.dispatch "actions-recorder/clear-after"
+
   renderItem: (record, index) ->
     onClick = =>
-      @props.onPeek index
+      @onPeek index
     className = classnames "recorder-item",
       "is-pointer": @props.isTravelling and @props.pointer is index
 
@@ -129,16 +142,16 @@ module.exports = React.createClass
 
     div className: "recorder-controller", style: style,
       div className: "recorder-header",
-        div className: "tap-button", onClick: @props.onCommit,
+        div className: "tap-button", onClick: @onCommit,
           locale.get('commit', @props.language)
-        div className: "tap-button", onClick: @props.onReset,
+        div className: "tap-button", onClick: @onReset,
           locale.get('reset', @props.language)
-        div className: "tap-button", onClick: @props.onMergeBefore,
+        div className: "tap-button", onClick: @onMergeBefore,
           locale.get('mergeBefore', @props.language)
-        div className: "tap-button", onClick: @props.onClearAfter,
+        div className: "tap-button", onClick: @onClearAfter,
           locale.get('clearAfter', @props.language)
         if @props.isTravelling
-          div className: "tap-button", onClick: @props.onRun,
+          div className: "tap-button", onClick: @onRun,
             locale.get('run', @props.language)
         input value: @state.dataPath, onChange: @onChange, onKeyDown: @onKeyDown
       div className: 'recorder-viewer',
