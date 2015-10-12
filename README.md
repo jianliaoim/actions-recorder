@@ -26,7 +26,7 @@ Get Devtools:
 
 ```coffee
 # for component
-Devtools = require 'actions-recorder/lib/app/devtools'
+Devtools = require 'actions-recorder/lib/devtools'
 ```
 
 `recorder` is a mutable object like store, with methods:

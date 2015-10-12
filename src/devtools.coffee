@@ -2,11 +2,11 @@
 diff = require 'immutablediff'
 React = require 'react/addons'
 keycode = require 'keycode'
-recorder = require '../recorder'
+recorder = require './recorder'
 Immutable = require("immutable")
 classnames = require("classnames")
 
-locale = require './locale'
+locale = require './app/locale'
 
 div = React.createFactory("div")
 pre = React.createFactory("pre")

@@ -3,7 +3,7 @@ React = require("react")
 Immutable = require("immutable")
 
 Todolist = React.createFactory(require("./todolist"))
-Devtools = React.createFactory(require("./devtools"))
+Devtools = React.createFactory(require("../devtools"))
 
 div = React.createFactory("div")
 
