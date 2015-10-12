@@ -13,7 +13,7 @@ module.exports = React.createClass
   displayName: "app-page"
   propTypes:
     store: React.PropTypes.instanceOf(Immutable.List)
-    recorder: React.PropTypes.object.isRequired
+    core: React.PropTypes.object.isRequired
 
   onCommit: onCommit = ->
     actions.internalCommit()
@@ -37,11 +37,11 @@ module.exports = React.createClass
     div className: "app-page",
       Todolist(store: @props.store)
       Controller
-        records: @props.recorder.records
-        pointer: @props.recorder.pointer
-        initial: @props.recorder.initial
-        updater: @props.recorder.updater
-        isTravelling: @props.recorder.isTravelling
+        records: @props.core.records
+        pointer: @props.core.pointer
+        initial: @props.core.initial
+        updater: @props.core.updater
+        isTravelling: @props.core.isTravelling
         onCommit: @onCommit
         onReset: @onReset
         onPeek: @onPeek

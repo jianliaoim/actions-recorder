@@ -36,11 +36,8 @@ window.onbeforeunload = ->
 
 
 Page = React.createFactory(require("./app/page"))
-render = render = (store, recorder) ->
-  React.render Page(
-    store: store
-    recorder: recorder
-  ), document.body
+render = render = (store, core) ->
+  React.render Page({store, core}), document.body
 
 recorder.request render
 recorder.subscribe render

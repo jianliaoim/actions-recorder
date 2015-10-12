@@ -7,6 +7,7 @@ core =
   pointer: 0
   isTravelling: false
   initial: Immutable.Map()
+  cachedStore: Immutable.Map()
   updater: (state) -> state
   inProduction: false
 
@@ -60,12 +61,13 @@ getNewStore = ->
 
 exports.setup = (options) ->
   assign core, options
+  core.cachedStore = core.initial
 
 exports.request = (fn) ->
-  fn getNewStore(), core
+  fn core.cachedStore, core
 
 exports.getState = ->
-  getNewStore()
+  core.cachedStore
 
 exports.getCore = ->
   core
@@ -85,5 +87,6 @@ exports.dispatch = (actionType, actionData) ->
     recorderEmit core.initial, core
   else
     assign core, callUpdater(actionType, actionData)
-    recorderEmit getNewStore(), core
+    core.cachedStore = getNewStore()
+    recorderEmit core.cachedStore, core
   return
