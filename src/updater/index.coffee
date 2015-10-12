@@ -1,5 +1,5 @@
 
-todo = require("./controller/todo")
+todo = require("./todo")
 
 module.exports = (store, actionType, actionData) ->
   switch actionType

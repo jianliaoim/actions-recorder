@@ -22,11 +22,11 @@ Get `recorder`:
 recorder = require 'actions-recorder'
 ```
 
-Get controller in Webpack:
+Get devtools in Webpack:
 
 ```coffee
 # for component
-recorderController = require 'actions-recorder/lib/panel/controller'
+Devtools = require 'actions-recorder/lib/app/devtools'
 # for styles
 require 'actions-recorder/style/actions-recorder.css'
 ```
@@ -41,10 +41,10 @@ require 'actions-recorder/style/actions-recorder.css'
 * `recorder.ubsubscribe (listener)`
 * `recorder.dispatch (actionType, actionData)`
 
-`recorderController` is a component to show actions:
+`Devtools` is a component to show actions:
 
 ```coffee
-React.createElement recorderController,
+React.createElement Devtools,
   records: Immutable.List()
   pointer: 0
   isTravelling: false

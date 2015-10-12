@@ -2,7 +2,7 @@
   "name": "actions-recorder",
   "version": "0.0.11",
   "description": "React Actions Recorder(like Redux)",
-  "main": "lib/core/recorder.js",
+  "main": "lib/recorder.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

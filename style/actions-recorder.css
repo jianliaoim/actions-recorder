@@ -1,5 +1,5 @@
 
-.recorder-controller {
+.recorder-devtools {
   width: 800px;
   height: 500px;
   position: fixed;
@@ -16,7 +16,7 @@
   z-index: 9999;
 }
 
-.recorder-controller .tap-button {
+.recorder-devtools .tap-button {
   display: inline-block;
   background-color: hsla(0,100%,100%,0.2);
   margin-right: 10px;
@@ -27,7 +27,7 @@
   cursor: pointer;
 }
 
-.recorder-controller .tap-button.is-selected {
+.recorder-devtools .tap-button.is-selected {
   background-color: hsla(0,100%,100%,0.5);
 }
 
@@ -55,20 +55,20 @@
   flex-direction: row;
 }
 
-.recorder-controller .recorder-monitor {
+.recorder-devtools .recorder-monitor {
   width: 250px;
   margin-right: 10px;
   overflow-x: hidden;
   padding-bottom: 400px;
 }
 
-.recorder-controller .recorder-item {
+.recorder-devtools .recorder-item {
   cursor: pointer;
   line-height: 30px;
   font-size: 13px;
   padding: 0 10px;
 }
-.recorder-controller .recorder-item.is-pointer {
+.recorder-devtools .recorder-item.is-pointer {
   background: hsla(0,100%,100%,0.2);
 }
 

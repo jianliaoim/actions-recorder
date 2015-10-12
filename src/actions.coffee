@@ -1,6 +1,6 @@
 
 shortid = require("shortid")
-recorder = require("./core/recorder")
+recorder = require("./recorder")
 
 exports.add = ->
   recorder.dispatch "todo/add",

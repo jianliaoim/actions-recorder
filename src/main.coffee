@@ -2,7 +2,7 @@
 React = require("react")
 Immutable = require("immutable")
 
-recorder = require("./core/recorder")
+recorder = require("./recorder")
 updater = require("./updater")
 
 require "origami-ui"

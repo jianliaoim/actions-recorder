@@ -3,7 +3,7 @@ React = require("react")
 Immutable = require("immutable")
 
 Todolist = React.createFactory(require("./todolist"))
-Controller = React.createFactory(require("../panel/controller"))
+Devtools = React.createFactory(require("./devtools"))
 
 div = React.createFactory("div")
 
@@ -16,7 +16,7 @@ module.exports = React.createClass
   render: render = ->
     div className: "app-page",
       Todolist(store: @props.store)
-      Controller
+      Devtools
         records: @props.core.records
         pointer: @props.core.pointer
         initial: @props.core.initial

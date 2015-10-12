@@ -2,7 +2,7 @@
 diff = require 'immutablediff'
 React = require 'react/addons'
 keycode = require 'keycode'
-recorder = require '../core/recorder'
+recorder = require '../recorder'
 Immutable = require("immutable")
 classnames = require("classnames")
 
@@ -16,7 +16,7 @@ span = document.createElement('span')
 tabs = ['action', 'store', 'prev', 'diff']
 
 module.exports = React.createClass
-  displayName: "actions-recorder-controller"
+  displayName: "actions-recorder-devtools"
   mixins: [React.addons.PureRenderMixin]
 
   propTypes:
@@ -139,20 +139,22 @@ module.exports = React.createClass
 
   render: ->
     style = {top: @state.y, left: @state.x}
+    hint = (text) =>
+      locale.get(text, @props.language)
 
-    div className: "recorder-controller", style: style,
+    div className: "recorder-devtools", style: style,
       div className: "recorder-header",
         div className: "tap-button", onClick: @onCommit,
-          locale.get('commit', @props.language)
+          hint 'commit'
         div className: "tap-button", onClick: @onReset,
-          locale.get('reset', @props.language)
+          hint 'reset'
         div className: "tap-button", onClick: @onMergeBefore,
-          locale.get('mergeBefore', @props.language)
+          hint 'mergeBefore'
         div className: "tap-button", onClick: @onClearAfter,
-          locale.get('clearAfter', @props.language)
+          hint 'clearAfter'
         if @props.isTravelling
           div className: "tap-button", onClick: @onRun,
-            locale.get('run', @props.language)
+            hint 'run'
         input value: @state.dataPath, onChange: @onChange, onKeyDown: @onKeyDown
       div className: 'recorder-viewer',
         div className: "recorder-monitor",
