@@ -14,12 +14,16 @@ module.exports = React.createClass
     core: React.PropTypes.object.isRequired
 
   render: render = ->
+    core = @props.core
+
     div className: "app-page",
       Todolist(store: @props.store)
       Devtools
-        records: @props.core.records
-        pointer: @props.core.pointer
-        initial: @props.core.initial
-        updater: @props.core.updater
-        isTravelling: @props.core.isTravelling
+        store: @props.store
+        records: core.records
+        pointer: core.pointer
+        initial: core.initial
+        updater: core.updater
+        cachedStore: core.cachedStore
+        isTravelling: core.isTravelling
         language: 'en'
