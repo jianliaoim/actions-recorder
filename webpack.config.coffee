@@ -19,5 +19,6 @@ module.exports =
   module: loaders: [
     {test: /\.coffee$/, loader: 'react-hot!coffee', ignore: /node_modules/}
     {test: /\.css$/, loader: 'style!css'}
+    {test: /\.json$/, loader: 'json'}
   ]
   plugins: [ new (webpack.optimize.CommonsChunkPlugin)('vendor', 'vendor.js') ]
