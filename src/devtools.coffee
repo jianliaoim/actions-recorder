@@ -13,7 +13,7 @@ Viewer = React.createFactory require './app/viewer'
 
 {div, pre} = React.DOM
 
-tabs = ['action', 'store', 'prev', 'diff']
+tabs = ['action', 'store', 'diff']
 
 module.exports = React.createClass
   displayName: "actions-recorder-devtools"
@@ -38,8 +38,16 @@ module.exports = React.createClass
   getInitialState: ->
     tab: 'action' # ['action', 'prev', 'store', 'diff']
 
+  getStoreAtPointer: (pointer) ->
+    if pointer < 1
+      result = @props.initial
+    else
+      updater = (acc, record) =>
+        @props.updater acc, record.get(0), record.get(1)
+      result = @props.records.slice(0, pointer).reduce updater, @props.initial
+
   onTabSelect: (name) ->
-    @setState tab: name
+    @setState tab: name, path: []
 
   onCommit: ->
     recorder.dispatch "actions-recorder/commit"
@@ -55,7 +63,6 @@ module.exports = React.createClass
 
   onMergeBefore: ->
     if @props.pointer > 0
-      console.log 'merge-before', @props.pointer
       recorder.dispatch "actions-recorder/merge-before"
 
   onClearAfter: ->
@@ -74,30 +81,24 @@ module.exports = React.createClass
     div key: index, style: @styleItem(isSelected), onClick: onClick, record.get(0)
 
   renderAction: ->
-    record = @props.records.get(@props.pointer)
-    Viewer height: (@props.height - 40), data: record.get(1)
-
-  renderPrev: ->
-    if @props.pointer is 0
-      result = @props.initial
+    if @props.pointer > 0
+      record = @props.records.get(@props.pointer - 1)
+      actionData = record.get(1)
     else
-      updater = (acc, record) =>
-        @props.updater acc, record.get(0), record.get(1)
-      result = @props.records.slice(0, (@props.pointer - 1)).reduce updater, @props.initial
-    Viewer height: (@props.height - 40), data: result
+      actionData = null
+    Viewer height: (@props.height - 40), data: actionData
 
   renderStore: ->
-    updater = (acc, record) =>
-      @props.updater acc, record.get(0), record.get(1)
-    result = @props.records.slice(0, @props.pointer).reduce updater, @props.initial
+    result = @getStoreAtPointer @props.pointer
     Viewer height: (@props.height - 40), data: result
 
   renderDiff: ->
-    updater = (acc, record) =>
-      @props.updater acc, record.get(0), record.get(1)
-    prevResult = @props.records.slice(0, @props.pointer).reduce updater, @props.initial
-    result = @props.records.slice(0, @props.pointer + 1).reduce updater, @props.initial
-    changes = diff prevResult, result
+    result = @getStoreAtPointer @props.pointer
+    prevResult = @getStoreAtPointer (@props.pointer - 1)
+    try
+      changes = diff prevResult, result
+    catch error
+      changes = error
     Viewer height: (@props.height - 40), data: changes
 
   renderCurrent: ->
@@ -111,7 +112,6 @@ module.exports = React.createClass
           div style: @styleEntry(name is @state.tab), onClick: onClick, key: name, name
       switch @state.tab
         when 'action' then @renderAction()
-        when 'prev' then @renderPrev()
         when 'store' then @renderStore()
         when 'diff' then @renderDiff()
 
@@ -137,9 +137,9 @@ module.exports = React.createClass
         div style: @styleButton(showStep), onClick: @onStep, hint 'step'
       div style: @styleViewer(),
         div style: @styleMonitor(),
-          div style: @styleItem(isInitialSelected), onClick: @onInitialClick, 'core.initial'
+          div style: @styleItem(isInitialSelected), onClick: @onInitialClick, '__initial__'
           @props.records.map @renderItem
-        if @props.isTravelling and @props.records.get(@props.pointer)?
+        if @props.isTravelling and @props.records.get(@props.pointer - 1)?
           @renderDetails()
         else
           @renderCurrent()
