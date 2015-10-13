@@ -47,7 +47,7 @@ module.exports = React.createClass
       result = @props.records.slice(0, pointer).reduce updater, @props.initial
 
   onTabSelect: (name) ->
-    @setState tab: name, path: []
+    @setState tab: name
 
   onCommit: ->
     recorder.dispatch "actions-recorder/commit"
@@ -86,11 +86,11 @@ module.exports = React.createClass
       actionData = record.get(1)
     else
       actionData = null
-    Viewer height: (@props.height - 40), data: actionData
+    Viewer key: @state.tab, height: (@props.height - 40), data: actionData
 
   renderStore: ->
     result = @getStoreAtPointer @props.pointer
-    Viewer height: (@props.height - 40), data: result
+    Viewer key: @state.tab, height: (@props.height - 40), data: result
 
   renderDiff: ->
     result = @getStoreAtPointer @props.pointer
@@ -99,10 +99,10 @@ module.exports = React.createClass
       changes = diff prevResult, result
     catch error
       changes = error
-    Viewer height: (@props.height - 40), data: changes
+    Viewer key: @state.tab, height: (@props.height - 40), data: changes
 
   renderCurrent: ->
-    Viewer height: (@props.height - 40), data: @props.store
+    Viewer key: @state.tab, height: (@props.height - 40), data: @props.store
 
   renderDetails: ->
     div style: @styleDetails(),
