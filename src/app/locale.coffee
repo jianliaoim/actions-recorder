@@ -5,6 +5,7 @@ enLocales =
   reset: 'reset run'
   commit: 'commit run'
   run: 'run'
+  step: 'step'
 
 zhLocales =
   mergeBefore: '合并前面的操作'
@@ -12,6 +13,7 @@ zhLocales =
   commit: '合并运行'
   reset: '重置运行'
   run: '运行'
+  step: '单步'
 
 exports.get = (key, lang) ->
   switch lang

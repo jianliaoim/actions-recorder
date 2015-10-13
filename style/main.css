@@ -4,11 +4,14 @@ body {
 
 .app-page {
   background-image: url(../images/paris.jpg);
+  display: flex;
+  flex-direction: row;
 }
 
 .app-todolist {
   color: black;
   overflow-y: auto;
+  width: 600px;
 }
 
 .todolist-header {

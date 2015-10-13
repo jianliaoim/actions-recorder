@@ -9,7 +9,7 @@ module.exports = React.createClass
   displayName: 'recorder-viewer'
 
   propTypes:
-    data: React.PropTypes.instanceOf(Immutable.Collection).isRequired
+    data: React.PropTypes.any
     height: React.PropTypes.number.isRequired
 
   getInitialState: ->
@@ -80,10 +80,14 @@ module.exports = React.createClass
   render: ->
     div style: @styleRoot(),
       @renderPath()
-      div style: @styleTable(),
-        @renderParentKeys()
-        @renderKeys()
-        @renderValue()
+      if @props.data instanceof Immutable.Collection
+        div style: @styleTable(),
+          @renderParentKeys()
+          @renderKeys()
+          @renderValue()
+      else
+        pre style: @styleValue(),
+          @props.data
 
   styleRoot: ->
     flex: 1

@@ -39,12 +39,27 @@ callUpdater = (actionType, actionData) ->
         isTravelling: not core.isTravelling
         pointer: 0
       when "merge-before"
-        initial: core.records.slice(0, core.pointer).reduce updater, core.initial
-        records: core.records.slice(core.pointer)
-        pointer: 0
+        if core.pointer is 0
+          {}
+        else
+          initial: core.records.slice(0, (core.pointer - 1)).reduce updater, core.initial
+          records: core.records.slice(core.pointer - 1)
+          pointer: 1
       when "clear-after"
-        records: core.records.slice(0, core.pointer + 1)
-        pointer: 0
+        records: core.records.slice(0, core.pointer)
+      when 'step'
+        backward = actionData
+        if backward
+          if core.pointer > 0
+            nextPointer = core.pointer - 1
+          else
+            nextPointer = core.pointer
+        else
+          if core.pointer < core.records.size
+            nextPointer = core.pointer + 1
+          else
+            nextPointer = core.pointer
+        pointer: nextPointer
       else
         console.warn "Unknown actions-recorder action: " + actionType
         {}
@@ -55,7 +70,7 @@ getNewStore = ->
   updater = (acc, action) ->
     core.updater acc, action.get(0), action.get(1)
   if core.isTravelling and core.pointer >= 0
-    core.records.slice(0, core.pointer + 1).reduce updater, core.initial
+    core.records.slice(0, core.pointer).reduce updater, core.initial
   else
     core.records.reduce updater, core.initial
 

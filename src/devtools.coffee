@@ -22,7 +22,7 @@ module.exports = React.createClass
   propTypes:
     store: React.PropTypes.instanceOf(Immutable.Collection).isRequired
     records: React.PropTypes.instanceOf(Immutable.List).isRequired
-    inital: React.PropTypes.instanceOf(Immutable.Map).isRequired
+    initial: React.PropTypes.instanceOf(Immutable.Collection).isRequired
     updater: React.PropTypes.func.isRequired
     pointer: React.PropTypes.number.isRequired
     isTravelling: React.PropTypes.bool.isRequired
@@ -54,29 +54,42 @@ module.exports = React.createClass
     recorder.dispatch "actions-recorder/run"
 
   onMergeBefore: ->
-    recorder.dispatch "actions-recorder/merge-before"
+    if @props.pointer > 0
+      console.log 'merge-before', @props.pointer
+      recorder.dispatch "actions-recorder/merge-before"
 
   onClearAfter: ->
     recorder.dispatch "actions-recorder/clear-after"
 
-  renderItem: (record, index) ->
+  onStep: (event) ->
+    recorder.dispatch 'actions-recorder/step', event.shiftKey
+
+  onInitialClick: ->
+    recorder.dispatch 'actions-recorder/peek', 0
+
+  renderItem: (record, originalIndex) ->
+    index = originalIndex + 1
     onClick = => @onPeek index
-    div key: index, style: @styleItem(@props.pointer is index), onClick: onClick, record.get(0)
+    isSelected = @props.pointer is index and @props.isTravelling
+    div key: index, style: @styleItem(isSelected), onClick: onClick, record.get(0)
 
   renderAction: ->
     record = @props.records.get(@props.pointer)
     Viewer height: (@props.height - 40), data: record.get(1)
 
   renderPrev: ->
-    updater = (acc, record) =>
-      @props.updater acc, record.get(0), record.get(1)
-    result = @props.records.slice(0, @props.pointer).reduce updater, @props.initial
+    if @props.pointer is 0
+      result = @props.initial
+    else
+      updater = (acc, record) =>
+        @props.updater acc, record.get(0), record.get(1)
+      result = @props.records.slice(0, (@props.pointer - 1)).reduce updater, @props.initial
     Viewer height: (@props.height - 40), data: result
 
   renderStore: ->
     updater = (acc, record) =>
       @props.updater acc, record.get(0), record.get(1)
-    result = @props.records.slice(0, @props.pointer + 1).reduce updater, @props.initial
+    result = @props.records.slice(0, @props.pointer).reduce updater, @props.initial
     Viewer height: (@props.height - 40), data: result
 
   renderDiff: ->
@@ -95,7 +108,7 @@ module.exports = React.createClass
       div style: @styleMode(),
         tabs.map (name) =>
           onClick = => @onTabSelect name
-          div style: @styleButton(name is @state.tab), onClick: onClick, key: name, name
+          div style: @styleEntry(name is @state.tab), onClick: onClick, key: name, name
       switch @state.tab
         when 'action' then @renderAction()
         when 'prev' then @renderPrev()
@@ -105,17 +118,26 @@ module.exports = React.createClass
   render: ->
     hint = (text) =>
       locale.get(text, @props.language)
+    isInitialSelected = @props.pointer is 0 and @props.isTravelling
+
+    showMergeBefore = @props.pointer > 0 and @props.isTravelling
+    showClearAfter = @props.pointer < @props.records.size and @props.isTravelling
+    showReset = @props.records.size > 0
+    showCommit = @props.records.size > 0
+    showRun = @props.isTravelling
+    showStep = @props.isTravelling and @props.records.size > 0
 
     div style: @styleRoot(),
       div style: @styleHeader(),
-        div style: @styleButton(false), onClick: @onCommit, hint 'commit'
-        div style: @styleButton(false), onClick: @onReset, hint 'reset'
-        div style: @styleButton(false), onClick: @onMergeBefore, hint 'mergeBefore'
-        div style: @styleButton(false), onClick: @onClearAfter, hint 'clearAfter'
-        if @props.isTravelling
-          div style: @styleButton(false), onClick: @onRun, hint 'run'
+        div style: @styleButton(showMergeBefore), onClick: @onMergeBefore, hint 'mergeBefore'
+        div style: @styleButton(showClearAfter), onClick: @onClearAfter, hint 'clearAfter'
+        div style: @styleButton(showReset), onClick: @onReset, hint 'reset'
+        div style: @styleButton(showCommit), onClick: @onCommit, hint 'commit'
+        div style: @styleButton(showRun), onClick: @onRun, hint 'run'
+        div style: @styleButton(showStep), onClick: @onStep, hint 'step'
       div style: @styleViewer(),
         div style: @styleMonitor(),
+          div style: @styleItem(isInitialSelected), onClick: @onInitialClick, 'core.initial'
           @props.records.map @renderItem
         if @props.isTravelling and @props.records.get(@props.pointer)?
           @renderDetails()
@@ -123,7 +145,7 @@ module.exports = React.createClass
           @renderCurrent()
 
   styleRoot: ->
-    background: 'hsla(200,60%,40%,0.8)'
+    background: 'hsla(200,60%,40%,0.7)'
     color: 'white'
     fontFamily: 'Menlo, Consolas, monospace'
     lineHeight: '1.8em'
@@ -133,11 +155,20 @@ module.exports = React.createClass
     transitionProperty: 'left, top'
     transitionDuration: '300ms'
     zIndex: 9999
-    position: 'absolute'
-    width: '100%'
-    height: '100%'
+    flex: 1
 
-  styleButton: (isSelected) ->
+  styleButton: (isAvailable) ->
+    display: 'inline-block'
+    backgroundColor: if isAvailable then 'hsla(0,100%,100%,0.2)' else 'hsla(0,100%,80%,0.2)'
+    color: if isAvailable then 'white' else 'hsla(0,100%,100%,0.4)'
+    marginRight: '10px'
+    padding: '0 10px'
+    fontSize: '14px'
+    fontFamily: 'Verdana, Helvetica, sans-serif'
+    lineHeight: '30px'
+    cursor: 'pointer'
+
+  styleEntry: (isSelected) ->
     display: 'inline-block'
     backgroundColor: if isSelected then 'hsla(0,100%,100%,0.5)' else 'hsla(0,100%,100%,0.2)'
     marginRight: '10px'
