@@ -144,7 +144,7 @@ module.exports = React.createClass
           @renderCurrent()
 
   styleRoot: ->
-    background: 'hsla(0, 0%, 0%, 0.6)'
+    background: 'hsla(0, 0%, 0%, 0.56)'
     color: 'white'
     fontFamily: 'Menlo, Consolas, Ubuntu Mono, monospace'
     lineHeight: '1.8em'
@@ -162,7 +162,7 @@ module.exports = React.createClass
     color: if isAvailable then 'white' else 'hsla(0,100%,100%,0.4)'
     marginRight: '10px'
     padding: '0 10px'
-    fontSize: '14px'
+    fontSize: '12px'
     fontFamily: 'Verdana, Helvetica, sans-serif'
     lineHeight: '30px'
     cursor: 'pointer'
@@ -172,7 +172,7 @@ module.exports = React.createClass
     backgroundColor: if isSelected then 'hsla(0,100%,100%,0.5)' else 'hsla(0,100%,100%,0.2)'
     marginRight: '10px'
     padding: '0 10px'
-    fontSize: '14px'
+    fontSize: '12px'
     fontFamily: 'Verdana, Helvetica, sans-serif'
     lineHeight: '30px'
     cursor: 'pointer'
@@ -193,13 +193,14 @@ module.exports = React.createClass
     paddingRight: '40px'
     marginRight: '10px'
     overflowX: 'hidden'
-    paddingBottom: '40px'
+    paddingTop: '100px'
+    paddingBottom: '100px'
     height: (@props.height - 40)
 
   styleItem: (isPointer) ->
     cursor: 'pointer'
     lineHeight: '30px'
-    fontSize: '13px'
+    fontSize: '12px'
     padding: '0 10px'
     backgroundColor: if isPointer then 'hsla(0,100%,100%,0.2)' else 'transparent'
 

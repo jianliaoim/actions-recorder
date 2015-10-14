@@ -12,7 +12,10 @@ getKeyFromCollection = (value) ->
     result = iterator.next()
     keys.push result.value if result.value?
     break if result.done
-  keys
+  if Immutable.Map.isMap value
+    keys.sort()
+  else
+    keys
 
 module.exports = React.createClass
   displayName: 'recorder-viewer'
@@ -48,7 +51,7 @@ module.exports = React.createClass
     if @state.path.length > 0 and value? and (value instanceof Immutable.Collection)
       keys = getKeyFromCollection value
       div style: @styleEntries(),
-        keys.sort().map (entry) =>
+        keys.map (entry) =>
           onClick = => @onParentKeyClick entry
           div key: entry,
             span style: @styleKey(), onClick: onClick, entry
@@ -58,7 +61,7 @@ module.exports = React.createClass
     if value? and (value instanceof Immutable.Collection)
       keys = getKeyFromCollection value
       div style: @styleEntries(),
-        keys.sort().map (entry) =>
+        keys.map (entry) =>
           onClick = => @onKeyClick entry
           div key: entry, onClick: onClick,
             span style: @styleKey(), entry
@@ -97,6 +100,8 @@ module.exports = React.createClass
     overflowY: 'auto'
     overflowX: 'visible'
     paddingRight: '40px'
+    paddingTop: '100px'
+    paddingBottom: '100px'
 
   stylePath: ->
     margin: '20px 0'
@@ -105,7 +110,7 @@ module.exports = React.createClass
     backgroundColor: Color().hsl(0,0,90,0.2).hslString()
     padding: '0 10px'
     lineHeight: '24px'
-    fontSize: '14px'
+    fontSize: '12px'
     display: 'inline-block'
     cursor: 'pointer'
     marginRight: '10px'
@@ -117,5 +122,7 @@ module.exports = React.createClass
     overflowY: 'auto'
     height: (@props.height - 70)
     lineHeight: '21px'
-    fontSize: '14px'
+    fontSize: '12px'
     fontFamily: 'Menlo, Consolas, Ubuntu Mono, monospace'
+    paddingTop: '100px'
+    paddingBottom: '100px'
