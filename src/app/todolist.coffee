@@ -5,8 +5,8 @@ classnames = require("classnames")
 
 actions = require("../actions")
 
-div = React.createFactory("div")
-input = React.createFactory("input")
+{div, a, input} = React.DOM
+repo = 'https://github.com/teambition/actions-recorder'
 
 module.exports = React.createClass
   displayName: "app-todolist"
@@ -34,9 +34,14 @@ module.exports = React.createClass
       input type: "text", value: task.get("text"), onChange: onUpdate
       div className: "button is-danger", onClick: onRemove, "Remove"
 
+  renderNote: ->
+    div className: 'note',
+      a href: repo, "Demo of actions-recorder, find more on GitHub."
+
   render: render = ->
     div className: "app-todolist",
-      div className: "todolist-header",
-        div className: "button is-attract", onClick: @onAdd, "Add"
+      @renderNote()
       div className: "todolist-table",
         @props.store.map(@rendeTask)
+      div className: "todolist-footer",
+        div className: "button is-attract", onClick: @onAdd, "Add"

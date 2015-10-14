@@ -53,6 +53,10 @@ React.createElement Devtools,
 
 Read code in `src/` to get more details.
 
+### Background Image
+
+http://www.fabuloussavers.com/new_wallpaper/DJ_Vinyl_Disc_freecomputerdesktopwallpaper_1920.jpg
+
 ### Development
 
 https://github.com/mvc-works/webpack-workflow

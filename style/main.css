@@ -3,7 +3,7 @@ body {
 }
 
 .app-page {
-  background-image: url(../images/paris.jpg);
+  background-image: url(../images/record.jpg);
   display: flex;
   flex-direction: row;
 }
@@ -14,15 +14,19 @@ body {
   width: 600px;
 }
 
-.todolist-header {
-  padding: 20px;
+.todolist-footer {
+  padding: 0px 20px;
 }
 
 .todolist-table {
   padding: 20px;
+  margin-top: 10px;
 }
 
-.todolist-task {}
+.todolist-task input {
+  vertical-align: middle;
+  background-color: hsla(0,100%,100%,0.8);
+}
 
 .todolist-task .checkbox {
   width: 30px;
@@ -30,8 +34,13 @@ body {
   background-color: hsl(0,0%,90%);
   display: inline-block;
   vertical-align: middle;
+  cursor: pointer;
 }
 
 .todolist-task .checkbox.is-checked {
-  background-color: hsl(240,60%,80%);
+  background-color: hsla(240,30%,70%,0.4);
+}
+
+.note {
+  padding: 20px;
 }
