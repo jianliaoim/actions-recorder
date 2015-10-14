@@ -1,6 +1,6 @@
 
 diff = require 'immutablediff'
-React = require 'react/addons'
+React = require 'react'
 keycode = require 'keycode'
 Immutable = require 'immutable'
 classnames = require 'classnames'
@@ -17,7 +17,6 @@ tabs = ['action', 'store', 'diff']
 
 module.exports = React.createClass
   displayName: "actions-recorder-devtools"
-  mixins: [React.addons.PureRenderMixin]
 
   propTypes:
     store: React.PropTypes.instanceOf(Immutable.Collection).isRequired
