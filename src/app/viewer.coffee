@@ -5,6 +5,15 @@ Immutable = require 'immutable'
 
 {div, span, pre} = React.DOM
 
+getKeyFromCollection = (value) ->
+  keys = []
+  iterator = value.keys()
+  while true
+    result = iterator.next()
+    keys.push result.value if result.value?
+    break if result.done
+  keys
+
 module.exports = React.createClass
   displayName: 'recorder-viewer'
 
@@ -35,42 +44,24 @@ module.exports = React.createClass
         span key: key, style: @styleKey(), onClick: onClick, key
 
   renderParentKeys: ->
-    keys = []
     value = @props.data.getIn(@state.path[...-1])
     if @state.path.length > 0 and value? and (value instanceof Immutable.Collection)
-      iterator = value.keys()
-      while true
-        result = iterator.next()
-        if result.value?
-          keys.push  result.value
-        if result.done
-          break
+      keys = getKeyFromCollection value
       div style: @styleEntries(),
-        keys.map (entry) =>
+        keys.sort().map (entry) =>
           onClick = => @onParentKeyClick entry
           div key: entry,
             span style: @styleKey(), onClick: onClick, entry
-    else
-      undefined
 
   renderKeys: ->
-    keys = []
     value = @props.data.getIn(@state.path)
     if value? and (value instanceof Immutable.Collection)
-      iterator = value.keys()
-      while true
-        result = iterator.next()
-        if result.value?
-          keys.push  result.value
-        if result.done
-          break
+      keys = getKeyFromCollection value
       div style: @styleEntries(),
-        keys.map (entry) =>
+        keys.sort().map (entry) =>
           onClick = => @onKeyClick entry
           div key: entry, onClick: onClick,
             span style: @styleKey(), entry
-    else
-      undefined
 
   renderValue: ->
     value = @props.data.getIn(@state.path)
@@ -101,10 +92,11 @@ module.exports = React.createClass
     height: (@props.height - 70)
 
   styleEntries: ->
-    width: '300px'
+    width: 'auto'
     height: (@props.height - 70)
     overflowY: 'auto'
     overflowX: 'visible'
+    paddingRight: '40px'
 
   stylePath: ->
     margin: '20px 0'
@@ -124,3 +116,6 @@ module.exports = React.createClass
     margin: 0
     overflowY: 'auto'
     height: (@props.height - 70)
+    lineHeight: '21px'
+    fontSize: '14px'
+    fontFamily: 'Menlo, Consolas, Ubuntu Mono, monospace'

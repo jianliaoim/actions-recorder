@@ -144,9 +144,9 @@ module.exports = React.createClass
           @renderCurrent()
 
   styleRoot: ->
-    background: 'hsla(200,60%,40%,0.7)'
+    background: 'hsla(0, 0%, 0%, 0.6)'
     color: 'white'
-    fontFamily: 'Menlo, Consolas, monospace'
+    fontFamily: 'Menlo, Consolas, Ubuntu Mono, monospace'
     lineHeight: '1.8em'
     display: 'flex'
     height: '100%'
@@ -189,7 +189,8 @@ module.exports = React.createClass
     position: 'relative'
 
   styleMonitor: ->
-    width: '250px'
+    width: 'auto'
+    paddingRight: '40px'
     marginRight: '10px'
     overflowX: 'hidden'
     paddingBottom: '40px'
