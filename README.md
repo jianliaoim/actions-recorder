@@ -6,13 +6,11 @@ Demo http://repo.tiye.me/actions-recorder/
 
 Tricks:
 
-* "prev" is "previous store", and "diff" is immutable-js-diff
-* text filter is like `data.getIn`, try it on "store" and "prev"
-* focus to text field, press Control+Command+<direction> to move
+* Click with "Shift" key pressing to step backward.
 
 ### Usage
 
-```
+```bash
 npm i --save actions-recorder
 ```
 
@@ -44,16 +42,15 @@ Devtools = require 'actions-recorder/lib/devtools'
 ```coffee
 React.createElement Devtools,
   records: Immutable.List()
+  initial: Immutable.List()
   pointer: 0
+  updater: (state, actionType, actionData) -> state
   isTravelling: false
+  width: window.innerWidth
+  height: window.innerHeight
 ```
 
-Read code in `src/` to get more details. Or read compiled JavaScipt:
-
-```
-npm i
-gulp script # generated at `lib/`
-```
+Read code in `src/` to get more details.
 
 ### Development
 
