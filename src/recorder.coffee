@@ -78,6 +78,12 @@ exports.setup = (options) ->
   assign core, options
   core.cachedStore = core.initial
 
+  if core.inProduction
+    setInterval ->
+      if core.records.size > 400 and (not core.isTravelling)
+        exports.dispatch 'actions-recorder/commit'
+    , (10 * 60 * 1000)
+
 exports.request = (fn) ->
   fn core.cachedStore, core
 
@@ -97,12 +103,6 @@ exports.unsubscribe = (fn) ->
 
 exports.dispatch = (actionType, actionData) ->
   actionData = Immutable.fromJS(actionData)
-  if core.inProduction
-    core.initial = core.updater(core.initial, actionType, actionData)
-    core.cachedStore = core.initial
-    recorderEmit core.initial, core
-  else
-    assign core, callUpdater(actionType, actionData)
-    core.cachedStore = getNewStore()
-    recorderEmit core.cachedStore, core
-  return
+  assign core, callUpdater(actionType, actionData)
+  core.cachedStore = getNewStore()
+  recorderEmit core.cachedStore, core

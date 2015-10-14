@@ -14,6 +14,7 @@ defaultInfo =
   records: Immutable.List()
   pointer: 0
   updater: updater
+  inProduction: false
 
 rawPersistent = localStorage.getItem("actions-recorder")
 if rawPersistent

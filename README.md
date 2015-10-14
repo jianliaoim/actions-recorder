@@ -7,6 +7,7 @@ Demo http://repo.tiye.me/actions-recorder/
 Tricks:
 
 * Click with "Shift" key pressing to step backward.
+* set `inProduction` true if you want to limit size of `records` to `400`
 
 ### Usage
 
