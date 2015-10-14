@@ -27,16 +27,14 @@ module.exports = React.createClass
     pointer: React.PropTypes.number.isRequired
     isTravelling: React.PropTypes.bool.isRequired
     language: React.PropTypes.string
-    width: React.PropTypes.number
-    height: React.PropTypes.number
+    width: React.PropTypes.number.isRequired
+    height: React.PropTypes.number.isRequired
 
   getDefaultProps: ->
     language: 'en'
-    width: window.innerWidth
-    height: window.innerHeight
 
   getInitialState: ->
-    tab: 'action' # ['action', 'prev', 'store', 'diff']
+    tab: 'action' # ['action', 'store', 'diff']
 
   getStoreAtPointer: (pointer) ->
     if pointer < 1
@@ -86,11 +84,11 @@ module.exports = React.createClass
       actionData = record.get(1)
     else
       actionData = null
-    Viewer key: @state.tab, height: (@props.height - 40), data: actionData
+    Viewer key: @state.tab, height: (@props.height - 70), data: actionData
 
   renderStore: ->
     result = @getStoreAtPointer @props.pointer
-    Viewer key: @state.tab, height: (@props.height - 40), data: result
+    Viewer key: @state.tab, height: (@props.height - 70), data: result
 
   renderDiff: ->
     result = @getStoreAtPointer @props.pointer
@@ -99,10 +97,10 @@ module.exports = React.createClass
       changes = diff prevResult, result
     catch error
       changes = error
-    Viewer key: @state.tab, height: (@props.height - 40), data: changes
+    Viewer key: @state.tab, height: (@props.height - 70), data: changes
 
   renderCurrent: ->
-    Viewer key: @state.tab, height: (@props.height - 40), data: @props.store
+    Viewer key: @state.tab, height: (@props.height - 70), data: @props.store
 
   renderDetails: ->
     div style: @styleDetails(),
@@ -135,6 +133,7 @@ module.exports = React.createClass
         div style: @styleButton(showCommit), onClick: @onCommit, hint 'commit'
         div style: @styleButton(showRun), onClick: @onRun, hint 'run'
         div style: @styleButton(showStep), onClick: @onStep, hint 'step'
+        div style: @styleTip(), "(#{@props.pointer}/#{@props.records.size})"
       div style: @styleViewer(),
         div style: @styleMonitor(),
           div style: @styleItem(isInitialSelected), onClick: @onInitialClick, '__initial__'
@@ -212,3 +211,7 @@ module.exports = React.createClass
   styleMode: ->
     height: '30px'
     flexDirection: 'row'
+
+  styleTip: ->
+    fontSize: '12px'
+    display: 'inline-block'

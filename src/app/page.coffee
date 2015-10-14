@@ -27,3 +27,5 @@ module.exports = React.createClass
         cachedStore: core.cachedStore
         isTravelling: core.isTravelling
         language: 'en'
+        width: window.innerWidth
+        height: window.innerHeight
