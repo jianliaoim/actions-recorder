@@ -31,6 +31,7 @@ Devtools = require 'actions-recorder/lib/devtools'
 `recorder` is a mutable object like store, with methods:
 
 * `recorder.setup (options)`
+* `recorder.hotSetup (options)`
 * `recorder.request (store, recorder) ->`
 * `recorder.getState ()`
 * `recorder.getCore ()`
@@ -52,6 +53,22 @@ React.createElement Devtools,
 ```
 
 Read code in `src/` to get more details.
+
+### Basic Hot Module Replacement support
+
+`.hotSetup()` is used in hot replacing `updater` and `initial`:
+
+```
+if module.hot
+  module.hot.accept ['./updater', './schema'], ->
+    schema = require './schema'
+    updater = require './updater'
+    recorder.hotSetup
+      initial: schema.store
+      updater: updater
+```
+
+Also read `src/` for details. By now there's only basic support for HMR.
 
 ### Background Image
 

@@ -66,7 +66,7 @@ callUpdater = (actionType, actionData) ->
   else
     records: core.records.push(Immutable.List([actionType, actionData]))
 
-getNewStore = ->
+getStore = ->
   updater = (acc, action) ->
     core.updater acc, action.get(0), action.get(1)
   if core.isTravelling and core.pointer >= 0
@@ -83,6 +83,11 @@ exports.setup = (options) ->
       if core.records.size > 400 and (not core.isTravelling)
         exports.dispatch 'actions-recorder/commit'
     , (10 * 60 * 1000)
+
+exports.hotSetup = (options) ->
+  assign core, options
+  core.cachedStore = getStore()
+  recorderEmit core.cachedStore, core
 
 exports.request = (fn) ->
   fn core.cachedStore, core
@@ -104,5 +109,5 @@ exports.unsubscribe = (fn) ->
 exports.dispatch = (actionType, actionData) ->
   actionData = Immutable.fromJS(actionData)
   assign core, callUpdater(actionType, actionData)
-  core.cachedStore = getNewStore()
+  core.cachedStore = getStore()
   recorderEmit core.cachedStore, core

@@ -4,15 +4,14 @@ Immutable = require("immutable")
 
 recorder = require("./recorder")
 updater = require("./updater")
+schema = require './schema'
 # testData = require './test.json'
 
 require "origami-ui"
 require "../style/main.css"
 
 defaultInfo =
-  initial: Immutable.List()
-  records: Immutable.List()
-  pointer: 0
+  initial: schema.store
   updater: updater
   inProduction: false
 
@@ -29,6 +28,14 @@ if rawPersistent
 # defaultInfo.records = Immutable.fromJS([])
 
 recorder.setup defaultInfo
+if module.hot
+  module.hot.accept ['./updater', './schema'], ->
+    schema = require './schema'
+    updater = require './updater'
+    recorder.hotSetup
+      initial: schema.store
+      updater: updater
+
 window.onbeforeunload = ->
   recorder.request (store, core) ->
     jsonPersistent =

@@ -1,12 +1,11 @@
 
-shortid = require("shortid")
-recorder = require("./recorder")
+shortid = require 'shortid'
+recorder = require '../recorder'
+schema = require '../schema'
 
 exports.add = ->
-  recorder.dispatch "todo/add",
-    id: shortid.generate()
-    done: false
-    text: ""
+  task = schema.task.set 'id', shortid.generate()
+  recorder.dispatch "todo/add", task
 
 exports.update = (id, text) ->
   recorder.dispatch "todo/update",

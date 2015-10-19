@@ -4,15 +4,14 @@ todo = require("./todo")
 module.exports = (store, actionType, actionData) ->
   switch actionType
     when "todo/add"
-      todo.add store, actionType, actionData
+      todo.add store, actionData
     when "todo/update"
-      store
-      todo.update store, actionType, actionData
+      todo.update store, actionData
     when "todo/toggle"
-      todo.toggle store, actionType, actionData
+      todo.toggle store, actionData
     when "todo/remove"
       store
-      todo.remove store, actionType, actionData
+      todo.remove store, actionData
     else
       console.warn "Unknown action type: " + actionType
       store
