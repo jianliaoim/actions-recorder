@@ -19,12 +19,7 @@ module.exports = React.createClass
   displayName: "actions-recorder-devtools"
 
   propTypes:
-    store: React.PropTypes.instanceOf(Immutable.Collection).isRequired
-    records: React.PropTypes.instanceOf(Immutable.List).isRequired
-    initial: React.PropTypes.instanceOf(Immutable.Collection).isRequired
-    updater: React.PropTypes.func.isRequired
-    pointer: React.PropTypes.number.isRequired
-    isTravelling: React.PropTypes.bool.isRequired
+    core: React.PropTypes.instanceOf(Immutable.Map).isRequired
     language: React.PropTypes.string
     dispatch: React.PropTypes.func
     width: React.PropTypes.number.isRequired
@@ -37,16 +32,17 @@ module.exports = React.createClass
     tab: 'action' # ['action', 'store', 'diff']
 
   getStoreAtPointer: (pointer) ->
+    core = @props.core
     if pointer < 1
-      result = @props.initial
+      core.get('initial')
     else
       updater = (acc, record) =>
-        @props.updater acc, record.get(0), record.get(1)
-      result = @props.records.slice(0, pointer).reduce updater, @props.initial
+        core.get('updater') acc, record.get(0), record.get(1)
+      core.get('records').slice(0, pointer).reduce updater, core.get('initial')
 
   dispatch: (actionName, actionData) ->
     if @props.dispatch?
-      recorder.dispatch actionName, actionData
+      @props.dispatch actionName, actionData
     else
       recorder.dispatch actionName, actionData
 
@@ -66,7 +62,7 @@ module.exports = React.createClass
     @dispatch "actions-recorder/run"
 
   onMergeBefore: ->
-    if @props.pointer > 0
+    if @props.core.get('pointer') > 0
       @dispatch "actions-recorder/merge-before"
 
   onClearAfter: ->
@@ -79,34 +75,38 @@ module.exports = React.createClass
     @dispatch 'actions-recorder/peek', 0
 
   renderItem: (record, originalIndex) ->
-    index = @props.records.size - originalIndex
+    core = @props.core
+    index = core.get('records').size - originalIndex
     onClick = => @onPeek index
-    isSelected = @props.pointer is index and @props.isTravelling
+    isSelected = core.get('pointer') is index and core.get('isTravelling')
     div key: index, style: @styleItem(isSelected), onClick: onClick, record.get(0)
 
   renderAction: ->
-    if @props.pointer > 0
-      record = @props.records.get(@props.pointer - 1)
+    if @props.core.get('pointer') > 0
+      record = @props.core.get('records').get(@props.core.get('pointer') - 1)
       actionData = record.get(1)
     else
       actionData = null
     Viewer key: @state.tab, height: (@props.height - 70), data: actionData
 
   renderStore: ->
-    result = @getStoreAtPointer @props.pointer
+    result = @getStoreAtPointer @props.core.get('pointer')
     Viewer key: @state.tab, height: (@props.height - 70), data: result
 
   renderDiff: ->
-    result = @getStoreAtPointer @props.pointer
-    prevResult = @getStoreAtPointer (@props.pointer - 1)
+    core = @props.core
+    result = @getStoreAtPointer core.get('pointer')
+    prevResult = @getStoreAtPointer (core.get('pointer') - 1)
     try
       changes = diff prevResult, result
     catch error
       changes = error
-    Viewer key: @state.tab, height: (@props.height - 70), data: changes
+    Viewer key: @state.tab, height: (core.get('height') - 70), data: changes
 
   renderCurrent: ->
-    Viewer key: @state.tab, height: (@props.height - 70), data: @props.store
+    core = @props.core
+    store = core.get('cachedStore')
+    Viewer key: @state.tab, height: (core.get('height') - 70), data: store
 
   renderDetails: ->
     div style: @styleDetails(),
@@ -120,16 +120,18 @@ module.exports = React.createClass
         when 'diff' then @renderDiff()
 
   render: ->
-    hint = (text) =>
-      locale.get(text, @props.language)
-    isInitialSelected = @props.pointer is 0 and @props.isTravelling
+    core = @props.core
+    hint = (text) => locale.get(text, @props.language)
+    isInitialSelected = core.get('pointer') is 0 and core.get('isTravelling')
+    records = core.get('records')
+    isTravelling = core.get('isTravelling')
 
-    showMergeBefore = @props.pointer > 0 and @props.isTravelling
-    showClearAfter = @props.pointer < @props.records.size and @props.isTravelling
-    showReset = @props.records.size > 0
-    showCommit = @props.records.size > 0
-    showRun = @props.isTravelling
-    showStep = @props.isTravelling and @props.records.size > 0
+    showMergeBefore = core.get('pointer') > 0 and isTravelling
+    showClearAfter = core.get('pointer') < records.size and isTravelling
+    showReset = records.size > 0
+    showCommit = records.size > 0
+    showRun = isTravelling
+    showStep = isTravelling and records.size > 0
 
     div style: @styleRoot(),
       div style: @styleHeader(),
@@ -139,12 +141,12 @@ module.exports = React.createClass
         div style: @styleButton(showCommit), onClick: @onCommit, hint 'commit'
         div style: @styleButton(showRun), onClick: @onRun, hint 'run'
         div style: @styleButton(showStep), onClick: @onStep, hint 'step'
-        div style: @styleTip(), "(#{@props.pointer}/#{@props.records.size})"
+        div style: @styleTip(), "(#{core.get('pointer')}/#{core.get('records').size})"
       div style: @styleViewer(),
         div style: @styleMonitor(),
-          @props.records.reverse().map @renderItem
+          core.get('records').reverse().map @renderItem
           div style: @styleItem(isInitialSelected), onClick: @onInitialClick, '__initial__'
-        if @props.isTravelling and @props.records.get(@props.pointer - 1)?
+        if core.get('isTravelling') and core.get('records').get(core.get('pointer') - 1)?
           @renderDetails()
         else
           @renderCurrent()

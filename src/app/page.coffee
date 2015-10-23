@@ -13,18 +13,10 @@ module.exports = React.createClass
     core: React.PropTypes.instanceOf(Immutable.Map).isRequired
 
   render: ->
-    core = @props.core
-
     div className: "app-page",
-      Todolist(store: core.get('cachedStore'))
+      Todolist(store: @props.core.get('cachedStore'))
       Devtools
-        store: core.get('cachedStore')
-        records: core.get('records')
-        pointer: core.get('pointer')
-        initial: core.get('initial')
-        updater: core.get('updater')
-        cachedStore: core.get('cachedStore')
-        isTravelling: core.get('isTravelling')
+        core: @props.core
         language: 'en'
         width: window.innerWidth
         height: window.innerHeight

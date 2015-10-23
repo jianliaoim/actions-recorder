@@ -32,10 +32,10 @@ Devtools = require 'actions-recorder/lib/devtools'
 
 * `recorder.setup (options)`
 * `recorder.hotSetup (options)`
-* `recorder.request (store, recorder) ->`
+* `recorder.request (store, core) ->`
 * `recorder.getState ()`
 * `recorder.getCore ()`
-* `recorder.subscribe (store, recorder) ->`
+* `recorder.subscribe (store, core) ->`
 * `recorder.ubsubscribe (listener)`
 * `recorder.dispatch (actionType, actionData)`
 
@@ -43,11 +43,7 @@ Devtools = require 'actions-recorder/lib/devtools'
 
 ```coffee
 React.createElement Devtools,
-  records: Immutable.List()
-  initial: Immutable.List()
-  pointer: 0
-  updater: (state, actionType, actionData) -> state
-  isTravelling: false
+  core: core
   width: window.innerWidth
   height: window.innerHeight
 ```

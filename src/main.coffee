@@ -38,7 +38,7 @@ if module.hot
       updater: updater
 
 window.onbeforeunload = ->
-  recorder.request (store, core) ->
+  recorder.request (core) ->
     jsonPersistent =
       records: core.get('records').toJS()
       initial: core.get('initial').toJS()

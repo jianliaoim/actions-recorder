@@ -81,7 +81,7 @@ module.exports = React.createClass
           @renderValue()
       else
         pre style: @styleValue(),
-          @props.data
+          if @props.data? then @props.data else 'null'
 
   styleRoot: ->
     flex: 1
