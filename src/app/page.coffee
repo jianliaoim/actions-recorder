@@ -14,7 +14,7 @@ module.exports = React.createClass
 
   render: ->
     div className: "app-page",
-      Todolist(store: @props.core.get('cachedStore'))
+      Todolist(store: @props.core.get('store'))
       Devtools
         core: @props.core
         language: 'en'

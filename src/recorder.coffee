@@ -6,7 +6,7 @@ core = Immutable.Map
   pointer: 0
   isTravelling: false
   initial: Immutable.Map()
-  cachedStore: Immutable.Map()
+  store: Immutable.Map()
   updater: (state) -> state
   inProduction: false
 
@@ -75,7 +75,7 @@ getStore = ->
 
 exports.setup = (options) ->
   core = core.merge Immutable.fromJS(options)
-  core = core.set 'cachedStore', core.get('initial')
+  core = core.set 'store', core.get('initial')
 
   if core.get('inProduction')
     setInterval ->
@@ -85,17 +85,17 @@ exports.setup = (options) ->
 
 exports.hotSetup = (options) ->
   core = core.merge Immutable.fromJS(options)
-  code = core.set 'cachedStore', getStore()
+  code = core.set 'store', getStore()
   recorderEmit()
 
 exports.request = (fn) ->
   fn core
 
-exports.getState = ->
-  core.get('cachedStore')
+exports.getState = -> # deprecated
+  exports.getStore()
 
-exports.getCore = ->
-  core
+exports.getStore = ->
+  core.get('store')
 
 exports.subscribe = (fn) ->
   # bypass warning of "setState on unmounted component" with unshift
@@ -108,5 +108,5 @@ exports.unsubscribe = (fn) ->
 exports.dispatch = (actionType, actionData) ->
   actionData = Immutable.fromJS(actionData)
   core = core.merge callUpdater(actionType, actionData)
-  core = core.set 'cachedStore', getStore()
+  core = core.set 'store', getStore()
   recorderEmit()

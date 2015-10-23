@@ -28,16 +28,17 @@ Get Devtools:
 Devtools = require 'actions-recorder/lib/devtools'
 ```
 
-`recorder` is a mutable object like store, with methods:
+`recorder` has methods:
 
-* `recorder.setup (options)`
-* `recorder.hotSetup (options)`
-* `recorder.request (store, core) ->`
-* `recorder.getState ()`
-* `recorder.getCore ()`
-* `recorder.subscribe (store, core) ->`
-* `recorder.ubsubscribe (listener)`
-* `recorder.dispatch (actionType, actionData)`
+* `recorder.setup(options)`
+* `recorder.hotSetup(options)`
+* `recorder.getStore()`
+* `recorder.request (core) ->`
+* `recorder.subscribe (core) ->`
+* `recorder.ubsubscribe(listener)`
+* `recorder.dispatch(actionType, actionData)`
+
+You will need `recorder.getState()` or `core.get('store')` to find store.
 
 `Devtools` is a component to show actions:
 
