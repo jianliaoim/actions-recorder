@@ -79,7 +79,7 @@ module.exports = React.createClass
     @dispatch 'actions-recorder/peek', 0
 
   renderItem: (record, originalIndex) ->
-    index = originalIndex + 1
+    index = @props.records.size - originalIndex
     onClick = => @onPeek index
     isSelected = @props.pointer is index and @props.isTravelling
     div key: index, style: @styleItem(isSelected), onClick: onClick, record.get(0)
@@ -142,8 +142,8 @@ module.exports = React.createClass
         div style: @styleTip(), "(#{@props.pointer}/#{@props.records.size})"
       div style: @styleViewer(),
         div style: @styleMonitor(),
+          @props.records.reverse().map @renderItem
           div style: @styleItem(isInitialSelected), onClick: @onInitialClick, '__initial__'
-          @props.records.map @renderItem
         if @props.isTravelling and @props.records.get(@props.pointer - 1)?
           @renderDetails()
         else
