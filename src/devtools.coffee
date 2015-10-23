@@ -26,6 +26,7 @@ module.exports = React.createClass
     pointer: React.PropTypes.number.isRequired
     isTravelling: React.PropTypes.bool.isRequired
     language: React.PropTypes.string
+    dispatch: React.PropTypes.func
     width: React.PropTypes.number.isRequired
     height: React.PropTypes.number.isRequired
 
@@ -43,33 +44,39 @@ module.exports = React.createClass
         @props.updater acc, record.get(0), record.get(1)
       result = @props.records.slice(0, pointer).reduce updater, @props.initial
 
+  dispatch: (actionName, actionData) ->
+    if @props.dispatch?
+      recorder.dispatch actionName, actionData
+    else
+      recorder.dispatch actionName, actionData
+
   onTabSelect: (name) ->
     @setState tab: name
 
   onCommit: ->
-    recorder.dispatch "actions-recorder/commit"
+    @dispatch "actions-recorder/commit"
 
   onReset: ->
-    recorder.dispatch "actions-recorder/reset"
+    @dispatch "actions-recorder/reset"
 
   onPeek: (position) ->
-    recorder.dispatch "actions-recorder/peek", position
+    @dispatch "actions-recorder/peek", position
 
   onRun: ->
-    recorder.dispatch "actions-recorder/run"
+    @dispatch "actions-recorder/run"
 
   onMergeBefore: ->
     if @props.pointer > 0
-      recorder.dispatch "actions-recorder/merge-before"
+      @dispatch "actions-recorder/merge-before"
 
   onClearAfter: ->
-    recorder.dispatch "actions-recorder/clear-after"
+    @dispatch "actions-recorder/clear-after"
 
   onStep: (event) ->
-    recorder.dispatch 'actions-recorder/step', event.shiftKey
+    @dispatch 'actions-recorder/step', event.shiftKey
 
   onInitialClick: ->
-    recorder.dispatch 'actions-recorder/peek', 0
+    @dispatch 'actions-recorder/peek', 0
 
   renderItem: (record, originalIndex) ->
     index = originalIndex + 1

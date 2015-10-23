@@ -1,8 +1,7 @@
 
-assign = require("object-assign")
 Immutable = require("immutable")
 
-core =
+core = Immutable.Map
   records: Immutable.List()
   pointer: 0
   isTravelling: false
@@ -12,19 +11,19 @@ core =
   inProduction: false
 
 recorderListeners = Immutable.List()
-recorderEmit = (store, core) ->
+recorderEmit = ->
   recorderListeners.forEach (fn) ->
-    fn store, core
+    fn core
 
 callUpdater = (actionType, actionData) ->
   chunks = actionType.split("/")
   groupName = chunks[0]
   updater = (acc, action) ->
-    core.updater acc, action.get(0), action.get(1)
+    core.get('updater') acc, action.get(0), action.get(1)
   if groupName is "actions-recorder"
     switch chunks[1]
       when "commit"
-        initial: core.records.reduce updater, core.initial
+        initial: core.get('records').reduce updater, core.get('initial')
         records: Immutable.List()
         pointer: 0
         isTravelling: false
@@ -36,64 +35,64 @@ callUpdater = (actionType, actionData) ->
         pointer: actionData
         isTravelling: true
       when "run"
-        isTravelling: not core.isTravelling
+        isTravelling: not core.get('isTravelling')
         pointer: 0
       when "merge-before"
-        if core.pointer is 0
+        if core.get('pointer') is 0
           {}
         else
-          initial: core.records.slice(0, (core.pointer - 1)).reduce updater, core.initial
-          records: core.records.slice(core.pointer - 1)
+          initial: core.get('records').slice(0, (core.get('pointer') - 1)).reduce updater, core.get('initial')
+          records: core.get('records').slice(core.get('pointer') - 1)
           pointer: 1
       when "clear-after"
-        records: core.records.slice(0, core.pointer)
+        records: core.get('records').slice(0, core.get('pointer'))
       when 'step'
         backward = actionData
         if backward
-          if core.pointer > 0
-            nextPointer = core.pointer - 1
+          if core.get('pointer') > 0
+            nextPointer = core.get('pointer') - 1
           else
-            nextPointer = core.pointer
+            nextPointer = core.get('pointer')
         else
-          if core.pointer < core.records.size
-            nextPointer = core.pointer + 1
+          if core.get('pointer') < core.get('records').size
+            nextPointer = core.get('pointer') + 1
           else
-            nextPointer = core.pointer
+            nextPointer = core.get('pointer')
         pointer: nextPointer
       else
         console.warn "Unknown actions-recorder action: " + actionType
         {}
   else
-    records: core.records.push(Immutable.List([actionType, actionData]))
+    records: core.get('records').push(Immutable.List([actionType, actionData]))
 
 getStore = ->
   updater = (acc, action) ->
-    core.updater acc, action.get(0), action.get(1)
-  if core.isTravelling and core.pointer >= 0
-    core.records.slice(0, core.pointer).reduce updater, core.initial
+    core.get('updater') acc, action.get(0), action.get(1)
+  if core.get('isTravelling') and core.get('pointer') >= 0
+    core.get('records').slice(0, core.get('pointer')).reduce updater, core.get('initial')
   else
-    core.records.reduce updater, core.initial
+    core.get('records').reduce updater, core.get('initial')
 
 exports.setup = (options) ->
-  assign core, options
-  core.cachedStore = core.initial
+  core = core.merge Immutable.fromJS(options)
+  core = core.set 'cachedStore', core.get('initial')
 
-  if core.inProduction
+  if core.get('inProduction')
     setInterval ->
-      if core.records.size > 400 and (not core.isTravelling)
+      if core.get('records').size > 400 and (not core.get('isTravelling'))
         exports.dispatch 'actions-recorder/commit'
     , (10 * 60 * 1000)
 
 exports.hotSetup = (options) ->
-  assign core, options
-  core.cachedStore = getStore()
-  recorderEmit core.cachedStore, core
+  core = core.merge Immutable.fromJS(options)
+  code = core.set 'cachedStore', getStore()
+  recorderEmit()
 
 exports.request = (fn) ->
-  fn core.cachedStore, core
+  fn core
 
 exports.getState = ->
-  core.cachedStore
+  core.get('cachedStore')
 
 exports.getCore = ->
   core
@@ -108,6 +107,6 @@ exports.unsubscribe = (fn) ->
 
 exports.dispatch = (actionType, actionData) ->
   actionData = Immutable.fromJS(actionData)
-  assign core, callUpdater(actionType, actionData)
-  core.cachedStore = getStore()
-  recorderEmit core.cachedStore, core
+  core = core.merge callUpdater(actionType, actionData)
+  core = core.set 'cachedStore', getStore()
+  recorderEmit()

@@ -39,18 +39,18 @@ if module.hot
 window.onbeforeunload = ->
   recorder.request (store, core) ->
     jsonPersistent =
-      records: core.records.toJS()
-      initial: core.initial.toJS()
-      pointer: core.pointer
-      isTravelling: core.isTravelling
+      records: core.get('records').toJS()
+      initial: core.get('initial').toJS()
+      pointer: core.get('pointer')
+      isTravelling: core.get('isTravelling')
 
     rawPersistent = JSON.stringify(jsonPersistent)
     localStorage.setItem "actions-recorder", rawPersistent
 
 
 Page = React.createFactory(require("./app/page"))
-render = render = (store, core) ->
-  React.render Page({store, core}), document.body
+render = (core) ->
+  React.render Page({core}), document.body
 
 recorder.request render
 recorder.subscribe render

@@ -16,14 +16,14 @@ module.exports = React.createClass
   onAdd: onAdd = ->
     actions.add()
 
-  rendeTask: rendeTask = (task) ->
-    onToggle = onToggle = ->
+  rendeTask: (task) ->
+    onToggle = ->
       actions.toggle task.get("id")
 
-    onUpdate = onUpdate = (event) ->
+    onUpdate = (event) ->
       actions.update task.get("id"), event.target.value
 
-    onRemove = onRemove = ->
+    onRemove = ->
       actions.remove task.get("id")
 
     checkboxClassName = classnames "checkbox",

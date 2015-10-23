@@ -10,22 +10,21 @@ div = React.createFactory("div")
 module.exports = React.createClass
   displayName: "app-page"
   propTypes:
-    store: React.PropTypes.instanceOf(Immutable.List)
-    core: React.PropTypes.object.isRequired
+    core: React.PropTypes.instanceOf(Immutable.Map).isRequired
 
-  render: render = ->
+  render: ->
     core = @props.core
 
     div className: "app-page",
-      Todolist(store: @props.store)
+      Todolist(store: core.get('cachedStore'))
       Devtools
-        store: @props.store
-        records: core.records
-        pointer: core.pointer
-        initial: core.initial
-        updater: core.updater
-        cachedStore: core.cachedStore
-        isTravelling: core.isTravelling
+        store: core.get('cachedStore')
+        records: core.get('records')
+        pointer: core.get('pointer')
+        initial: core.get('initial')
+        updater: core.get('updater')
+        cachedStore: core.get('cachedStore')
+        isTravelling: core.get('isTravelling')
         language: 'en'
         width: window.innerWidth
         height: window.innerHeight
