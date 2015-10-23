@@ -1,13 +1,17 @@
 
-React Actions Recorder(like Redux)
+React Actions Recorder, inspired by Redux
 ----
 
-Demo http://repo.tiye.me/actions-recorder/
+Demo http://ui.talk.ai/actions-recorder/
 
 Tricks:
 
 * Click with "Shift" key pressing to step backward.
 * set `inProduction` true if you want to limit size of `records` to `400`
+
+### Chinese Guide
+
+* [用 React Actions Recorder 作为 Store 写 Todolist](http://segmentfault.com/a/1190000003863338)
 
 ### Usage
 
@@ -35,7 +39,7 @@ Devtools = require 'actions-recorder/lib/devtools'
 * `recorder.getStore()`
 * `recorder.request (core) ->`
 * `recorder.subscribe (core) ->`
-* `recorder.ubsubscribe(listener)`
+* `recorder.unsubscribe(listener)`
 * `recorder.dispatch(actionType, actionData)`
 
 You will need `recorder.getState()` or `core.get('store')` to find store.
@@ -73,7 +77,10 @@ http://www.fabuloussavers.com/new_wallpaper/DJ_Vinyl_Disc_freecomputerdesktopwal
 
 ### Development
 
-https://github.com/mvc-works/webpack-workflow
+```bash
+gulp html # generates index.html
+webpack-dev-server --hot --host=0.0.0.0
+```
 
 ### License
 
