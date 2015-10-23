@@ -4,6 +4,7 @@ body {
 
 .app-page {
   background-image: url(../images/record.jpg);
+  background-size: cover;
   display: flex;
   flex-direction: row;
 }

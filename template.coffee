@@ -19,4 +19,5 @@ module.exports = (data) ->
         link rel: 'icon', href: 'http://mvc-works.org/png/mvc.png'
         script src: data.vendor, defer: true
         script src: data.main, defer: true
-      body null
+      body null,
+        div class: 'app'

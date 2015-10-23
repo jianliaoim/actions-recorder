@@ -1,5 +1,6 @@
 
 React = require("react")
+ReactDOM = require 'react-dom'
 Immutable = require("immutable")
 
 recorder = require("./recorder")
@@ -50,7 +51,7 @@ window.onbeforeunload = ->
 
 Page = React.createFactory(require("./app/page"))
 render = (core) ->
-  React.render Page({core}), document.body
+  ReactDOM.render Page({core}), document.querySelector('.app')
 
 recorder.request render
 recorder.subscribe render
