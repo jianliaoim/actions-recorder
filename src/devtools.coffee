@@ -101,12 +101,12 @@ module.exports = React.createClass
       changes = diff prevResult, result
     catch error
       changes = error
-    Viewer key: @state.tab, height: (core.get('height') - 70), data: changes
+    Viewer key: @state.tab, height: (@props.height - 70), data: changes
 
   renderCurrent: ->
     core = @props.core
     store = core.get('cachedStore')
-    Viewer key: @state.tab, height: (core.get('height') - 70), data: store
+    Viewer key: @state.tab, height: (@props.height - 70), data: store
 
   renderDetails: ->
     div style: @styleDetails(),

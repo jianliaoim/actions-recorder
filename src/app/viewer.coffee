@@ -5,18 +5,6 @@ Immutable = require 'immutable'
 
 {div, span, pre} = React.DOM
 
-getKeyFromCollection = (value) ->
-  keys = []
-  iterator = value.keys()
-  while true
-    result = iterator.next()
-    keys.push result.value if result.value?
-    break if result.done
-  if Immutable.Map.isMap value
-    keys.sort()
-  else
-    keys
-
 module.exports = React.createClass
   displayName: 'recorder-viewer'
 
@@ -49,9 +37,8 @@ module.exports = React.createClass
   renderParentKeys: ->
     value = @props.data.getIn(@state.path[...-1])
     if @state.path.length > 0 and value? and (value instanceof Immutable.Collection)
-      keys = getKeyFromCollection value
       div style: @styleEntries(),
-        keys.map (entry) =>
+        value.keySeq().map (entry) =>
           onClick = => @onParentKeyClick entry
           div key: entry,
             span style: @styleKey(), onClick: onClick, entry
@@ -59,9 +46,8 @@ module.exports = React.createClass
   renderKeys: ->
     value = @props.data.getIn(@state.path)
     if value? and (value instanceof Immutable.Collection)
-      keys = getKeyFromCollection value
       div style: @styleEntries(),
-        keys.map (entry) =>
+        value.keySeq().map (entry) =>
           onClick = => @onKeyClick entry
           div key: entry, onClick: onClick,
             span style: @styleKey(), entry
