@@ -2,6 +2,7 @@
 React = require 'react'
 Color = require 'color'
 Immutable = require 'immutable'
+isSafari = require './is-safari'
 
 {div, span, pre} = React.DOM
 
@@ -71,12 +72,15 @@ module.exports = React.createClass
 
   styleRoot: ->
     flex: 1
+    WebkitFlex: 1
     height: @props.height
 
   styleTable: ->
-    display: 'flex'
+    display: if isSafari then '-webkit-flex' else 'flex'
     flexDirection: 'row'
+    WebkitFlexDirection: 'row'
     flex: 1
+    WebkitFlex: 1
     overflowY: 'auto'
     height: (@props.height - 70)
 
@@ -85,8 +89,9 @@ module.exports = React.createClass
     height: (@props.height - 70)
     overflowY: 'auto'
     overflowX: 'visible'
-    paddingRight: '40px'
-    paddingTop: '100px'
+    paddingRight: '10px'
+    paddingLeft: '10px'
+    paddingTop: '60px'
     paddingBottom: '100px'
 
   stylePath: ->
@@ -104,11 +109,13 @@ module.exports = React.createClass
 
   styleValue: ->
     flex: 1
+    WebkitFlex: 1
     margin: 0
     overflowY: 'auto'
     height: (@props.height - 70)
     lineHeight: '21px'
     fontSize: '12px'
     fontFamily: 'Menlo, Consolas, Ubuntu Mono, monospace'
-    paddingTop: '100px'
+    paddingTop: '60px'
     paddingBottom: '100px'
+    paddingLeft: '10px'

@@ -8,10 +8,12 @@ classnames = require 'classnames'
 recorder = require './recorder'
 
 locale = require './app/locale'
+scrollbar = require './app/scrollbar'
+isSafari = require './app/is-safari'
 
 Viewer = React.createFactory require './app/viewer'
 
-{div, pre} = React.DOM
+{div, pre, style} = React.DOM
 
 tabs = ['action', 'store', 'diff']
 
@@ -133,7 +135,8 @@ module.exports = React.createClass
     showRun = isTravelling
     showStep = isTravelling and records.size > 0
 
-    div style: @styleRoot(),
+    div style: @styleRoot(), className: 'actions-recorder-devtools',
+      style null, scrollbar
       div style: @styleHeader(),
         div style: @styleButton(showMergeBefore), onClick: @onMergeBefore, hint 'mergeBefore'
         div style: @styleButton(showClearAfter), onClick: @onClearAfter, hint 'clearAfter'
@@ -156,13 +159,15 @@ module.exports = React.createClass
     color: 'white'
     fontFamily: 'Menlo, Consolas, Ubuntu Mono, monospace'
     lineHeight: '1.8em'
-    display: 'flex'
+    display: if isSafari then '-webkit-flex' else 'flex'
     height: '100%'
     flexDirection: 'column'
+    WebkitFlexDirection: 'column'
     transitionProperty: 'left, top'
     transitionDuration: '300ms'
     zIndex: 9999
     flex: 1
+    WebkitFlex: 1
 
   styleButton: (isAvailable) ->
     display: 'inline-block'
@@ -191,8 +196,10 @@ module.exports = React.createClass
 
   styleViewer: ->
     flex: 1
-    display: 'flex'
+    WebkitFlex: 1
+    display: if isSafari then '-webkit-flex' else 'flex'
     flexDirection: 'row'
+    WebkitFlexDirection: 'row'
     height: (@props.height - 40)
     position: 'relative'
 
@@ -214,13 +221,14 @@ module.exports = React.createClass
 
   styleDetails: ->
     flex: 1
+    WebkitFlex: 1
     overflow: 'auto'
-    display: 'flex'
+    display: if isSafari then '-webkit-flex' else 'flex'
     flexDirection: 'column'
+    WebkitFlexDirection: 'column'
 
   styleMode: ->
     height: '30px'
-    flexDirection: 'row'
 
   styleTip: ->
     fontSize: '12px'
