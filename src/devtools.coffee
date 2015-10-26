@@ -107,7 +107,7 @@ module.exports = React.createClass
 
   renderCurrent: ->
     core = @props.core
-    store = core.get('cachedStore')
+    store = core.get('store')
     Viewer key: @state.tab, height: (@props.height - 70), data: store
 
   renderDetails: ->

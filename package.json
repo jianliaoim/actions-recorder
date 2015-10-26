@@ -1,6 +1,6 @@
 {
   "name": "actions-recorder",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "description": "React Actions Recorder(like Redux)",
   "main": "lib/recorder.js",
   "scripts": {

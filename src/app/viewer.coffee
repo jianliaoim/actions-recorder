@@ -39,7 +39,7 @@ module.exports = React.createClass
     value = @props.data.getIn(@state.path[...-1])
     if @state.path.length > 0 and value? and (value instanceof Immutable.Collection)
       div style: @styleEntries(),
-        value.keySeq().map (entry) =>
+        value.keySeq().sort().map (entry) =>
           onClick = => @onParentKeyClick entry
           div key: entry,
             span style: @styleKey(), onClick: onClick, entry
@@ -48,7 +48,7 @@ module.exports = React.createClass
     value = @props.data.getIn(@state.path)
     if value? and (value instanceof Immutable.Collection)
       div style: @styleEntries(),
-        value.keySeq().map (entry) =>
+        value.keySeq().sort().map (entry) =>
           onClick = => @onKeyClick entry
           div key: entry, onClick: onClick,
             span style: @styleKey(), entry
