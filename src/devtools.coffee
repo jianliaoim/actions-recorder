@@ -218,6 +218,7 @@ module.exports = React.createClass
     fontSize: '12px'
     padding: '0 10px'
     backgroundColor: if isPointer then 'hsla(0,100%,100%,0.2)' else 'transparent'
+    whiteSpace: 'nowrap'
 
   styleDetails: ->
     flex: 1
