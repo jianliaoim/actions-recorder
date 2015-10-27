@@ -7,4 +7,3 @@ exports.task = Immutable.fromJS
   done: false
   text: ''
   id: null
-

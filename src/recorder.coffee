@@ -15,15 +15,25 @@ recorderEmit = ->
   recorderListeners.forEach (fn) ->
     fn core
 
-callUpdater = (actionType, actionData) ->
-  chunks = actionType.split("/")
-  groupName = chunks[0]
+getStoreFrom = (records) ->
+  updateHandler = core.get 'updater'
   updater = (acc, action) ->
-    core.get('updater') acc, action.get(0), action.get(1)
+    updateHandler acc, action.get(0), action.get(1)
+  records.reduce updater, core.get('initial')
+
+# main updater
+
+callUpdater = (actionType, actionData) ->
+  pointer = core.get('pointer')
+  records = core.get('records')
+
+  [groupName, actionName] = actionType.split("/")
   if groupName is "actions-recorder"
-    switch chunks[1]
+    switch actionName
       when "commit"
-        initial: core.get('records').reduce updater, core.get('initial')
+        newStore = getStoreFrom records
+        initial: newStore
+        store: newStore
         records: Immutable.List()
         pointer: 0
         isTravelling: false
@@ -31,61 +41,82 @@ callUpdater = (actionType, actionData) ->
         records: Immutable.List()
         pointer: 0
         isTravelling: false
+        store: core.get('initial')
       when "peek"
-        pointer: actionData
-        isTravelling: true
+        nextPointer = actionData
+        if nextPointer is 0
+          pointer: 0
+          isTravelling: true
+          store: core.get('initial')
+        else
+          pointer: nextPointer # pointer in integer
+          isTravelling: true
+          store: getStoreFrom(records.slice(0, nextPointer))
       when "run"
-        isTravelling: not core.get('isTravelling')
+        isTravelling: false
         pointer: 0
+        store: getStoreFrom(records)
       when "merge-before"
-        if core.get('pointer') is 0
+        if pointer <= 1
           {}
         else
-          initial: core.get('records').slice(0, (core.get('pointer') - 1)).reduce updater, core.get('initial')
-          records: core.get('records').slice(core.get('pointer') - 1)
+          newStore = getStoreFrom records.slice(0, pointer)
+          initial: newStore
+          records: records.slice(pointer - 1)
           pointer: 1
+          store: newStore
       when "clear-after"
-        records: core.get('records').slice(0, core.get('pointer'))
-      when 'step'
-        backward = actionData
-        if backward
-          if core.get('pointer') > 0
-            nextPointer = core.get('pointer') - 1
-          else
-            nextPointer = core.get('pointer')
+        if pointer is records.size
+          {}
         else
-          if core.get('pointer') < core.get('records').size
-            nextPointer = core.get('pointer') + 1
+          newRecords = records.slice(0, pointer)
+          records: newRecords
+          store: getStoreFrom(newRecords)
+      when 'step'
+        if actionData # going backward?
+          if pointer > 0
+            nextPointer = pointer - 1
+            pointer: nextPointer
+            store: getStoreFrom(records.slice(0, nextPointer))
           else
-            nextPointer = core.get('pointer')
-        pointer: nextPointer
+            {}
+        else
+          if pointer < records.size
+            nextPointer = pointer + 1
+            pointer: nextPointer
+            store: getStoreFrom(records.slice(0, nextPointer))
+          else
+            {}
       else
         console.warn "Unknown actions-recorder action: " + actionType
         {}
   else
-    records: core.get('records').push(Immutable.List([actionType, actionData]))
+    newRecords = records.push(Immutable.List([actionType, actionData]))
+    if core.get('isTravelling')
+      records: newRecords
+    else
+      updateHandler = core.get 'updater'
+      records: newRecords
+      store: updateHandler core.get('store'), actionType, actionData
 
-getStore = ->
-  updater = (acc, action) ->
-    core.get('updater') acc, action.get(0), action.get(1)
-  if core.get('isTravelling') and core.get('pointer') >= 0
-    core.get('records').slice(0, core.get('pointer')).reduce updater, core.get('initial')
-  else
-    core.get('records').reduce updater, core.get('initial')
+# exports methods
 
 exports.setup = (options) ->
-  core = core.merge Immutable.fromJS(options)
-  core = core.set 'store', core.get('initial')
+  core = core
+  .merge Immutable.fromJS(options)
+  .set 'store', options.initial
 
   if core.get('inProduction')
     setInterval ->
-      if core.get('records').size > 400 and (not core.get('isTravelling'))
+      if core.get('records').size > 40 and (not core.get('isTravelling'))
         exports.dispatch 'actions-recorder/commit'
-    , (10 * 60 * 1000)
+    , (5 * 60 * 1000)
 
 exports.hotSetup = (options) ->
-  core = core.merge Immutable.fromJS(options)
-  code = core.set 'store', getStore()
+  core = core
+  .merge Immutable.fromJS(options)
+  .set 'store', getStoreFrom(core.get('records'))
+
   recorderEmit()
 
 exports.request = (fn) ->
@@ -108,5 +139,4 @@ exports.unsubscribe = (fn) ->
 exports.dispatch = (actionType, actionData) ->
   actionData = Immutable.fromJS(actionData)
   core = core.merge callUpdater(actionType, actionData)
-  core = core.set 'store', getStore()
   recorderEmit()

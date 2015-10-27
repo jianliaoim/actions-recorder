@@ -11,7 +11,7 @@ repo = 'https://github.com/teambition/actions-recorder'
 module.exports = React.createClass
   displayName: "app-todolist"
   propTypes:
-    store: React.PropTypes.instanceOf(Immutable.List)
+    store: React.PropTypes.instanceOf(Immutable.List).isRequired
 
   onAdd: onAdd = ->
     actions.add()
