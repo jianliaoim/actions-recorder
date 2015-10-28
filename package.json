@@ -1,6 +1,6 @@
 {
   "name": "actions-recorder",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "React Actions Recorder(like Redux)",
   "main": "lib/recorder.js",
   "scripts": {
@@ -41,7 +41,7 @@
     "keycode": "^2.1.0",
     "object-assign": "^4.0.1",
     "react": ">=0.13.3",
-    "react-lite-json-viewer": "0.0.1"
+    "react-lite-json-viewer": "^1.0.0"
   },
   "repository": {
     "type": "git",
