@@ -40,7 +40,8 @@
     "immutablediff": "^0.4.2",
     "keycode": "^2.1.0",
     "object-assign": "^4.0.1",
-    "react": ">=0.13.3"
+    "react": ">=0.13.3",
+    "react-lite-json-viewer": "0.0.1"
   },
   "repository": {
     "type": "git",

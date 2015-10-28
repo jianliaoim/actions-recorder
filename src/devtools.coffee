@@ -11,6 +11,8 @@ locale = require './app/locale'
 scrollbar = require './app/scrollbar'
 isSafari = require './app/is-safari'
 
+LiteJSONViewer = React.createFactory require 'react-lite-json-viewer'
+
 Viewer = React.createFactory require './app/viewer'
 
 {div, pre, style} = React.DOM
@@ -26,6 +28,8 @@ module.exports = React.createClass
     dispatch: React.PropTypes.func
     width: React.PropTypes.number.isRequired
     height: React.PropTypes.number.isRequired
+    path: React.PropTypes.instanceOf(Immutable.List).isRequired
+    onPathChange: React.PropTypes.func.isRequired
 
   getDefaultProps: ->
     language: 'en'
@@ -89,11 +93,15 @@ module.exports = React.createClass
       actionData = record.get(1)
     else
       actionData = null
-    Viewer key: @state.tab, height: (@props.height - 70), data: actionData
+    LiteJSONViewer
+      key: @state.tab, height: (@props.height - 70), data: actionData
+      path: @props.path, onChange: @props.onPathChange
 
   renderStore: ->
     result = @getStoreAtPointer @props.core.get('pointer')
-    Viewer key: @state.tab, height: (@props.height - 70), data: result
+    LiteJSONViewer
+      key: @state.tab, height: (@props.height - 70), data: result
+      path: @props.path, onChange: @props.onPathChange
 
   renderDiff: ->
     core = @props.core
@@ -103,12 +111,16 @@ module.exports = React.createClass
       changes = diff prevResult, result
     catch error
       changes = error
-    Viewer key: @state.tab, height: (@props.height - 70), data: changes
+    LiteJSONViewer
+      key: @state.tab, height: (@props.height - 70), data: changes
+      path: @props.path, onChange: @props.onPathChange
 
   renderCurrent: ->
     core = @props.core
     store = core.get('store')
-    Viewer key: @state.tab, height: (@props.height - 70), data: store
+    LiteJSONViewer
+      key: @state.tab, height: (@props.height - 70), data: store
+      path: @props.path, onChange: @props.onPathChange
 
   renderDetails: ->
     div style: @styleDetails(),

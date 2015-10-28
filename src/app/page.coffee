@@ -12,6 +12,12 @@ module.exports = React.createClass
   propTypes:
     core: React.PropTypes.instanceOf(Immutable.Map).isRequired
 
+  getInitialState: ->
+    path: Immutable.List()
+
+  onPathChange: (path) ->
+    @setState path: path
+
   render: ->
     div className: "app-page",
       Todolist(store: @props.core.get('store'))
@@ -20,3 +26,5 @@ module.exports = React.createClass
         language: 'en'
         width: window.innerWidth
         height: window.innerHeight
+        path: @state.path
+        onPathChange: @onPathChange
