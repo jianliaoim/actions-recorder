@@ -37,6 +37,7 @@ Devtools = require 'actions-recorder/lib/devtools'
 * `recorder.setup(options)`
 * `recorder.hotSetup(options)`
 * `recorder.getStore()`
+* `recorder.getCore()`
 * `recorder.request (core) ->`
 * `recorder.subscribe (core) ->`
 * `recorder.unsubscribe(listener)`
