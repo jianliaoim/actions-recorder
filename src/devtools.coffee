@@ -3,7 +3,6 @@ diff = require 'immutablediff'
 React = require 'react'
 keycode = require 'keycode'
 Immutable = require 'immutable'
-classnames = require 'classnames'
 
 recorder = require './recorder'
 
@@ -98,19 +97,13 @@ module.exports = React.createClass
       path: @props.path, onChange: @props.onPathChange
 
   renderStore: ->
-    result = @getStoreAtPointer @props.core.get('pointer')
+    result = @props.core.get('store')
     LiteJSONViewer
       key: @state.tab, height: (@props.height - 70), data: result
       path: @props.path, onChange: @props.onPathChange
 
   renderDiff: ->
-    core = @props.core
-    result = @getStoreAtPointer core.get('pointer')
-    prevResult = @getStoreAtPointer (core.get('pointer') - 1)
-    try
-      changes = diff prevResult, result
-    catch error
-      changes = error
+    changes = @props.core.get('diff')
     LiteJSONViewer
       key: @state.tab, height: (@props.height - 70), data: changes
       path: @props.path, onChange: @props.onPathChange

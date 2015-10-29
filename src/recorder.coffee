@@ -1,4 +1,5 @@
 
+diff = require 'immutablediff'
 Immutable = require("immutable")
 
 core = Immutable.Map
@@ -7,13 +8,14 @@ core = Immutable.Map
   isTravelling: false
   initial: Immutable.Map()
   store: Immutable.Map()
+  diff: null
   updater: (state) -> state
   inProduction: false
 
 recorderListeners = Immutable.List()
 recorderEmit = ->
   recorderListeners.forEach (fn) ->
-    fn core
+    fn exports.getCore()
 
 getStoreFrom = (records) ->
   updateHandler = core.get 'updater'
@@ -37,25 +39,32 @@ callUpdater = (actionType, actionData) ->
         records: Immutable.List()
         pointer: 0
         isTravelling: false
+        diff: null
       when "reset"
         records: Immutable.List()
         pointer: 0
         isTravelling: false
         store: core.get('initial')
+        diff: null
       when "peek"
         nextPointer = actionData
         if nextPointer is 0
           pointer: 0
           isTravelling: true
           store: core.get('initial')
+          diff: null
         else
+          newStore = getStoreFrom(records.slice(0, nextPointer))
+          prevStore = getStoreFrom(records.slice(0, nextPointer - 1))
           pointer: nextPointer # pointer in integer
           isTravelling: true
-          store: getStoreFrom(records.slice(0, nextPointer))
+          store: newStore
+          diff: diff prevStore, newStore
       when "run"
         isTravelling: false
         pointer: 0
         store: getStoreFrom(records)
+        diff: null
       when "merge-before"
         if pointer <= 1
           {}
@@ -76,15 +85,21 @@ callUpdater = (actionType, actionData) ->
         if actionData # going backward?
           if pointer > 0
             nextPointer = pointer - 1
+            newStore = getStoreFrom(records.slice(0, nextPointer))
+            prevStore = getStoreFrom(records.slice(0, nextPointer - 1))
             pointer: nextPointer
-            store: getStoreFrom(records.slice(0, nextPointer))
+            store: newStore
+            diff: diff prevStore, newStore
           else
             {}
         else
           if pointer < records.size
             nextPointer = pointer + 1
+            newStore = getStoreFrom(records.slice(0, nextPointer))
+            prevStore = getStoreFrom(records.slice(0, nextPointer - 1))
             pointer: nextPointer
-            store: getStoreFrom(records.slice(0, nextPointer))
+            store: newStore
+            diff: diff prevStore, newStore
           else
             {}
       else
@@ -120,13 +135,16 @@ exports.hotSetup = (options) ->
   recorderEmit()
 
 exports.request = (fn) ->
-  fn core
+  fn exports.getCore()
 
 exports.getState = -> # deprecated
   exports.getStore()
 
 exports.getStore = ->
   core.get('store')
+
+exports.getCore = ->
+  core.delete 'updater'
 
 exports.subscribe = (fn) ->
   # bypass warning of "setState on unmounted component" with unshift
