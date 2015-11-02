@@ -1,4 +1,5 @@
 
+hsl = require 'hsl'
 diff = require 'immutablediff'
 React = require 'react'
 keycode = require 'keycode'
@@ -11,8 +12,6 @@ scrollbar = require './app/scrollbar'
 isSafari = require './app/is-safari'
 
 LiteJSONViewer = React.createFactory require 'react-lite-json-viewer'
-
-Viewer = React.createFactory require './app/viewer'
 
 {div, pre, style} = React.DOM
 
@@ -160,7 +159,7 @@ module.exports = React.createClass
           @renderCurrent()
 
   styleRoot: ->
-    background: 'hsla(0, 0%, 0%, 0.56)'
+    background: hsl(0, 0, 0, 0.56)
     color: 'white'
     fontFamily: 'Menlo, Consolas, Ubuntu Mono, monospace'
     lineHeight: '1.8em'
@@ -176,8 +175,8 @@ module.exports = React.createClass
 
   styleButton: (isAvailable) ->
     display: 'inline-block'
-    backgroundColor: if isAvailable then 'hsla(0,100%,100%,0.2)' else 'hsla(0,100%,80%,0.2)'
-    color: if isAvailable then 'white' else 'hsla(0,100%,100%,0.4)'
+    backgroundColor: if isAvailable then hsl(0,100,100,0.2) else hsl(0,100,80,0.2)
+    color: if isAvailable then 'white' else hsl(0,100,100,0.4)
     marginRight: '10px'
     padding: '0 10px'
     fontSize: '12px'
@@ -187,7 +186,7 @@ module.exports = React.createClass
 
   styleEntry: (isSelected) ->
     display: 'inline-block'
-    backgroundColor: if isSelected then 'hsla(0,100%,100%,0.5)' else 'hsla(0,100%,100%,0.2)'
+    backgroundColor: if isSelected then hsl(0,100,100,0.5) else hsl(0,100,100,0.2)
     marginRight: '10px'
     padding: '0 10px'
     fontSize: '12px'
@@ -222,7 +221,7 @@ module.exports = React.createClass
     lineHeight: '30px'
     fontSize: '12px'
     padding: '0 10px'
-    backgroundColor: if isPointer then 'hsla(0,100%,100%,0.2)' else 'transparent'
+    backgroundColor: if isPointer then hsl(0,100,100,0.2) else 'transparent'
     whiteSpace: 'nowrap'
 
   styleDetails: ->

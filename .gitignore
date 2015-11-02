@@ -2,7 +2,4 @@
 /build/
 /lib/
 /node_modules/
-/assets.json
 /index.html
-
-/src/*.json
