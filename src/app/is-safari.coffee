@@ -1,3 +1,9 @@
-ua = navigator.userAgent.toLowerCase()
 
-module = (ua.indexOf('safari') isnt -1) and (ua.indexOf('chrome') is -1)
+detectIsSafari = ->
+  return false if (typeof window) is 'undefined'
+  ua = window.navigator.userAgent.toLowerCase()
+  return false if ua.indexOf('safari') is -1 # webkit
+  return false if ua.indexOf('chrome') isnt -1 # chrome
+  return true
+
+module.exports = detectIsSafari()
