@@ -128,9 +128,9 @@ exports.setup = (options) ->
     , (5 * 60 * 1000)
 
 exports.hotSetup = (options) ->
-  core = core
-  .merge Immutable.fromJS(options)
-  .set 'store', getStoreFrom(core.get('records'))
+  core = core.merge Immutable.fromJS(options)
+  # getStoreFrom depends on updater, use mutable data to modify reference
+  core = core.set 'store', getStoreFrom(core.get('records'))
 
   recorderEmit()
 
