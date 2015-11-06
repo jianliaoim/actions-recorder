@@ -49,9 +49,11 @@ You will need `recorder.getState()` or `core.get('store')` to find store.
 
 ```coffee
 React.createElement Devtools,
-  core: core
+  core: core # internal data from recorder
   width: window.innerWidth
-  height: window.innerHeight
+  height: window.innerHeight # flexbox not powerful enough, use JavaScript
+  path: @state.path # path of JSON tree reader, use `Immutable.List()` as default
+  onPathChange: (newPath) -> @setState path: newPath
 ```
 
 Read code in `src/` to get more details.
@@ -60,7 +62,7 @@ Read code in `src/` to get more details.
 
 `.hotSetup()` is used in hot replacing `updater` and `initial`:
 
-```
+```coffee
 if module.hot
   module.hot.accept ['./updater', './schema'], ->
     schema = require './schema'
