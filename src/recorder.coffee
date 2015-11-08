@@ -20,12 +20,12 @@ recorderEmit = ->
 getStoreFrom = (records) ->
   updateHandler = core.get 'updater'
   updater = (acc, action) ->
-    updateHandler acc, action.get(0), action.get(1)
+    updateHandler acc, action.get(0), action.get(1), action.get(2)
   records.reduce updater, core.get('initial')
 
 # main updater
 
-callUpdater = (actionType, actionData) ->
+callUpdater = (actionType, actionData, actionMeta) ->
   pointer = core.get('pointer')
   records = core.get('records')
 
@@ -106,13 +106,13 @@ callUpdater = (actionType, actionData) ->
         console.warn "Unknown actions-recorder action: " + actionType
         {}
   else
-    newRecords = records.push(Immutable.List([actionType, actionData]))
+    newRecords = records.push(Immutable.List([actionType, actionData, actionMeta]))
     if core.get('isTravelling')
       records: newRecords
     else
       updateHandler = core.get 'updater'
       records: newRecords
-      store: updateHandler core.get('store'), actionType, actionData
+      store: updateHandler core.get('store'), actionType, actionData, actionMeta
 
 # exports methods
 
@@ -130,7 +130,11 @@ exports.setup = (options) ->
 exports.hotSetup = (options) ->
   core = core.merge Immutable.fromJS(options)
   # getStoreFrom depends on updater, use mutable data to modify reference
-  core = core.set 'store', getStoreFrom(core.get('records'))
+  if core.get('isTravelling')
+    records = core.get('records').slice(0, core.get('pointer'))
+  else
+    records = core.get('records')
+  core = core.set 'store', getStoreFrom(records)
 
   recorderEmit()
 
@@ -154,7 +158,8 @@ exports.unsubscribe = (fn) ->
   recorderListeners = recorderListeners.filterNot (listener) ->
     listener is fn
 
-exports.dispatch = (actionType, actionData) ->
+exports.dispatch = (actionType, actionData, actionMeta) ->
   actionData = Immutable.fromJS(actionData)
-  core = core.merge callUpdater(actionType, actionData)
+  actionMeta = Immutable.fromJS(actionMeta)
+  core = core.merge callUpdater(actionType, actionData, actionMeta)
   recorderEmit()
