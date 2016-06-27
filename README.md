@@ -19,18 +19,38 @@ Tricks:
 npm i --save actions-recorder
 ```
 
-Get `recorder`:
+```coffee
+# initial structure of store
+initialStore = Immutable.fromJS []
+
+# update a tree of store with Immutable APIs with pure function
+updater = (store, actionType, actionData) ->
+  store
+```
 
 ```coffee
 recorder = require 'actions-recorder'
-```
 
-Get Devtools:
+recorder.setup
+  initial: initialStore
+  updater: updater
+  inProduction: false
+
+render = (core) ->
+  App = Page store: core.get('store')
+  ReactDOM.render App, document.querySelector('.app')
+
+recorder.request render
+recorder.subscribe render
+```
 
 ```coffee
-# for component
-Devtools = require 'actions-recorder/lib/devtools'
+# if you have several args, use an Array or an Object
+# argument will be turned into Immutable data
+recorder.dispatch 'category/name', 'some arguments'
 ```
+
+### API Docs
 
 `recorder` has methods:
 
@@ -43,7 +63,16 @@ Devtools = require 'actions-recorder/lib/devtools'
 * `recorder.unsubscribe(listener)`
 * `recorder.dispatch(actionType, actionData)`
 
-You will need `recorder.getState()` or `core.get('store')` to find store.
+You will need `recorder.getStore()` or `core.get('store')` to find store.
+
+### display DevTools
+
+Get Devtools:
+
+```coffee
+# for component
+Devtools = require 'actions-recorder/lib/devtools'
+```
 
 `Devtools` is a component to show actions:
 
